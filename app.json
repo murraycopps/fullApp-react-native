@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "fullApp-react-native",
+    "slug": "fullApp-react-native",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "fullApp-react-native"
+}
