@@ -1,0 +1,233 @@
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
+import { useState, Component, useEffect } from 'react';
+import DropDownPicker from 'react-native-dropdown-picker';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import calc from './scripts.js';
+
+export default function Pacing() {
+  const [isPace, setPaceOrSplit] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    { label: 'Custom', value: 'custom' },
+    { label: '800', value: 800 },
+    { label: 'Mile', value: 1609.34 },
+    { label: 'Two Mile', value: 3218.68 },
+    { label: '5k', value: 5000 },
+    { label: '8k', value: 8000 },
+    { label: '10k', value: 10000 },
+  ]);
+  const [minute, setMin] = useState('');
+  const [second, setSec] = useState('');
+  const [isCustom, setIsCustom] = useState(true);
+  const [customDist, setCustomDist] = useState('');
+  const [index, setIndex] = useState(-1);
+  const [output, setOutput] = useState();
+
+
+
+  useEffect(() => {
+    setOutput(calc(index, minute, second, customDist, isPace));
+  }, [isPace, value, minute, second, customDist, index]);
+
+
+  const toggleCustom = () => {
+    if (isCustom && value == 'custom') {
+      setIsCustom(false);
+    }
+    else {
+      setIsCustom(true);
+    }
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].value == value) {
+        setIndex(i);
+      }
+    }
+  }
+  return (
+    <SafeAreaView style={styles.screen}>
+      <StatusBar style="auto" />
+      <View style={styles.buttonBox}>
+        <View style={styles.half}>
+          <TextInput
+            style={styles.timeInput}
+            placeholder=""
+            keyboardType="numeric"
+            onChangeText={newText => setMin(newText)}
+            defaultValue={minute}
+          />
+          <Text style={styles.colon}>:</Text>
+          <TextInput
+            style={styles.timeInput}
+            placeholder=""
+            keyboardType="numeric"
+            onChangeText={newText => setSec(newText)}
+            defaultValue={second}
+          />
+        </View>
+        <View style={styles.half}>
+          {isCustom ? <DropDownPicker
+            style={styles.dropDown}
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setIndex={setIndex}
+            setItems={setItems}
+            onChangeValue={toggleCustom}
+          /> : <View style={styles.custom}>
+            <TextInput style={styles.customInput} onChangeText={newText => setCustomDist(newText)} />
+            <FontAwesome style={styles.icon} name='ban' onPress={toggleCustom} />
+          </View>
+
+
+          }
+        </View>
+
+      </View>
+      <View style={[styles.buttonBox, {zIndex:-5}]}>
+        <TouchableOpacity
+          style={styles.fullButton}
+          onPress={() => setPaceOrSplit(!isPace)}
+          underlayColor='#fff'>
+          <Text style={styles.buttonText}>Switch to {isPace ? <Text>Pace</Text> : <Text>Split</Text>}</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.output}>
+        <Text style={styles.outputText}>{output}</Text>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+
+
+
+
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+const scale = windowWidth / 320;
+
+export function normalize(size) {
+  const newSize = size * scale
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
+
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: '#F65900',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  buttonBox: {
+    flex: 1,
+    margin: windowWidth / 80,
+    width: '95%',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    // position: 'absolute',
+    zIndex: 100,
+  },
+  output: {
+    flex: 9,
+    margin: windowWidth / 80,
+    width:  0.95 * windowWidth,
+    backgroundColor: '#fff',
+    zIndex: -1,
+  },
+  half: {
+    width: '50%',
+    justifyContent: 'center',
+    alignContent: 'center',
+    flexDirection: 'row',
+    position: 'relative',
+    zIndex: 1000,
+  },
+  halfButton: {
+    width: '50%',
+    justifyContent: 'center',
+    alignContent: 'center',
+    backgroundColor: '#fff',
+  },
+  fullButton: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignContent: 'center',
+    backgroundColor: '#fff',
+    position: 'absolute',
+    zIndex: -5,
+  },
+  buttonText: {
+    color: 'black',
+    textAlign: 'center',
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  timeInput: {
+    width: '48%',
+    height: '100%',
+    backgroundColor: "#fff",
+    color: 'black',
+    paddingLeft: 10,
+    paddingRight: 10,
+    fontSize: normalize(20),
+  },
+  colon: {
+    width: '4%',
+    height: '100%',
+    textAlign: 'center',
+    justifyContent: 'center',
+    fontSize: normalize(35),
+    backgroundColor: '#fff',
+  },
+  dropDown: {
+    height: '100%',
+    borderRadius: 0,
+    borderWidth: 0,
+    borderColor: '#fff',
+    zIndex: 1000,
+  },
+  custom: {
+    flex: 1,
+    flexDirection: 'row',
+    width: '100%',
+    height: '100%',
+  },
+  customInput: {
+    flex: 1,
+    flexDirection: 'row',
+    width: '100%',
+    height: '100%',
+    backgroundColor: "#fff",
+    fontSize: normalize(20),
+  },
+  icon: {
+    fontSize: normalize(30),
+    height: '100%',
+    textAlign: 'center',
+    color: 'red',
+    justifyContent: 'center',
+    backgroundColor: "#fff",
+    paddingTop: '5%',
+    paddingBottom: '5%',
+  },
+  outputText: {
+    width: '100%',
+    fontSize: normalize(25),
+  },
+
+
+});
