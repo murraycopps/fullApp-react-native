@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback, Keyboard, Button, SafeAreaView, Dimensions, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
 import { useState, Component, useEffect, useRef } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -64,7 +64,10 @@ export default function Vdot() {
     }, [])
 
     const changeVariables = event => {
-        if (raceToggleRef.current == event.target) {
+        Keyboard.dismiss();
+         console.log(raceToggleButton._children);
+        if (raceToggleButton == event.target) {
+            // console.log("isRace: " + isRace);
             if (!isRace) {
                 setTime(true);
             }
@@ -83,66 +86,69 @@ export default function Vdot() {
     }
     return (
         <SafeAreaView style={styles.screen}>
-            <StatusBar style="auto" />
-            <View style={styles.buttonBox}>
-                <View style={styles.half}>
-                    <TextInput
-                        style={styles.timeInput}
-                        placeholder=""
-                        keyboardType="numeric"
-                        onChangeText={newText => setMin(newText)}
-                        defaultValue={minute}
-                    />
-                    <Text style={styles.colon}>:</Text>
-                    <TextInput
-                        style={styles.timeInput}
-                        placeholder=""
-                        keyboardType="numeric"
-                        onChangeText={newText => setSec(newText)}
-                        defaultValue={second}
-                    />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View>
+                    <StatusBar style="auto" />
+                    <View style={styles.buttonBox}>
+                        <View style={styles.half}>
+                            <TextInput
+                                style={styles.timeInput}
+                                placeholder=""
+                                keyboardType="numeric"
+                                onChangeText={newText => setMin(newText)}
+                                defaultValue={minute}
+                            />
+                            <Text style={styles.colon}>:</Text>
+                            <TextInput
+                                style={styles.timeInput}
+                                placeholder=""
+                                keyboardType="numeric"
+                                onChangeText={newText => setSec(newText)}
+                                defaultValue={second}
+                            />
+                        </View>
+                        <View style={styles.half}>
+                            <DropDownPicker
+                                style={styles.dropDown}
+                                open={open}
+                                value={value}
+                                items={items}
+                                setOpen={setOpen}
+                                setValue={setValue}
+                                setItems={setItems}
+                                onPress={Keyboard.dismiss}
+                            />
+
+
+
+
+                        </View>
+
+                    </View>
+                    <View style={[styles.buttonBox, { zIndex: -5 }]}>
+                        <TouchableOpacity
+                            style={styles.halfButton}
+                            onPress={changeVariables}
+                            ref={raceToggleRef}
+                            underlayColor='#fff'>
+                            <Text style={styles.buttonText}>{isRace ? <Text>Training</Text> : <Text>Race</Text>}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.halfButton}
+                            onPress={changeVariables}
+                            underlayColor='#fff'>
+                            <Text style={styles.buttonText}>{isTime ? <Text>Pace</Text> : <Text>Time</Text>}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.output}>
+                        <Text style={styles.vdotText}>{myVdot}</Text>
+                        <View style={styles.labelBox}>
+                            <Text style={styles.labelOutput}>{label}</Text>
+                            <Text style={styles.outputText}>{output}</Text>
+                        </View>
+                    </View>
                 </View>
-                <View style={styles.half}>
-                    <DropDownPicker
-                        style={styles.dropDown}
-                        open={open}
-                        value={value}
-                        items={items}
-                        setOpen={setOpen}
-                        setValue={setValue}
-                        setItems={setItems}
-                    // onChangeValue={}
-                    />
-
-
-
-
-                </View>
-
-            </View>
-            <View style={[styles.buttonBox, { zIndex: -5 }]}>
-                <TouchableOpacity
-                    style={styles.halfButton}
-                    onPress={changeVariables}
-                    ref={raceToggleRef}
-                    underlayColor='#fff'>
-                    <Text style={styles.buttonText}>{isRace ? <Text>Training</Text> : <Text>Race</Text>}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.halfButton}
-                    onPress={changeVariables}
-                    underlayColor='#fff'>
-                    <Text style={styles.buttonText}>{isTime ? <Text>Pace</Text> : <Text>Time</Text>}</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.output}>
-                <Text style={styles.vdotText}>{myVdot}</Text>
-                <View style={styles.labelBox}>
-                    <Text style={styles.labelOutput}>{label}</Text>
-                    <Text style={styles.outputText}>{output}</Text>
-                </View>
-            </View>
-
+            </TouchableWithoutFeedback>
         </SafeAreaView>
     );
 }

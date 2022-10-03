@@ -2,13 +2,13 @@ export default function calc(disDex, min, sec, custom, paceOrSplit) {
     //declare variables 
     var time = 60 * min + 1*sec;
     disDex = disDex + 1;
-    var disOptions = [800, 1609, 3218, 5000, 8000, 10000];
-    var splitReturnOptions = [[100, 200, 300, 400, 600, 800], [100, 200, 400, 409, 800, 809, 1200, 1609], [400, 800, 1609, 2400, 3218], [400, 800, 1609, 3218, 5000], [400, 800, 1609, 3218, 5000, 8000], [400, 800, 1609, 3218, 5000, 8000, 10000]];
+    var disOptions = [800, 1609, 3000,  3218, 5000, 8000, 10000];
+    var splitReturnOptions = [[100, 200, 300, 400, 600, 800], [100, 200, 400, 409, 800, 809, 1200, 1609], [200, 400, 800, 1500, 1609, 2400, 3000], [200, 400, 800, 1609, 2400, 3218], [400, 800, 1609, 3218, 5000], [400, 800, 1609, 3218, 5000, 8000], [400, 800, 1609, 3218, 5000, 8000, 10000]];
     var splitReturns = [];
     var dis;
 
     if (!paceOrSplit) {
-        splitReturnOptions = [[100, 200, 400, 600, 1000, 1200, 1609], [100, 200, 400, 600, 800, 1000, 1500, 3218, 5000], [200, 400, 800, 1609, 3000, 5000], [400, 800, 1609, 3000, 3218, 8000, 10000], [400, 800, 1609, 3000, 3218, 5000, 10000], [400, 800, 1609, 3000, 3218, 5000, 8000]];
+        splitReturnOptions = [[100, 200, 400, 600, 1000, 1200, 1500, 1609, 3218, 5000], [100, 200, 400, 600, 800, 1000, 1500, 3000, 3218, 5000], [200, 400, 800, 1500, 1609, 3218, 5000, 8000, 10000], [200, 400, 800, 1609, 3000, 5000, 8000, 10000], [200, 400, 800, 1609, 3000, 3218, 8000, 10000], [400, 800, 1609, 3000, 3218, 5000, 10000], [400, 800, 1609, 3000, 3218, 5000, 8000]];
     }
     //check if function will work
     if (disDex == 0) {
@@ -20,10 +20,11 @@ export default function calc(disDex, min, sec, custom, paceOrSplit) {
         var addDis = 400;
 
         //set list to distances at each compleated lap of the track
-
+        
+        splitReturns = [100,200]
         if (paceOrSplit) {
             if (dis <= 4400) {
-                for (var i = 0; addDis < dis; i++) {
+                for (var i = 2; addDis < dis; i++) {
                     splitReturns[i] = addDis;
                     addDis += 400;
                 }
@@ -39,10 +40,10 @@ export default function calc(disDex, min, sec, custom, paceOrSplit) {
             }
         }
         else {
-            var options = [400, 800, 1609, 3000, 3218, 5000, 8000, 10000];
+            var options = [400, 800, 1500, 1609, 3000, 3218, 5000, 8000, 10000];
             var isFirst = true;
             for (var i = 0; i < options.length; i++) {
-                if (options == dis) {
+                if (options[i] == dis) {
                     isFirst = false;
                 }
                 else if (options[i] > dis && isFirst) {
@@ -50,6 +51,9 @@ export default function calc(disDex, min, sec, custom, paceOrSplit) {
                     isFirst = false;
                 }
                 splitReturns.push(options[i]);
+            }
+            if(dis>10000){
+                splitReturns.push(dis);
             }
         }
     }

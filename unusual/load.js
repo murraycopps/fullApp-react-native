@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, Keyboard, TouchableWithoutFeedback, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
 import { useState, Component, useEffect, useRef } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { calcuate } from './scripts.js';
@@ -10,14 +10,14 @@ export default function Vdot() {
     const [output, setOutput] = useState('');
     const [inDis, setInDis] = useState('');
     const [outDis, setOutDis] = useState([0]);
-    const [lastDis, setLastDis] = useState('');
+    const [lastDis, setLastDis] = useState(0);
     const [hour, setHour] = useState('');
     const [minute, setMin] = useState('');
     const [second, setSec] = useState('');
     const [plusColor, setPlusColor] = useState('black');
 
     useEffect(() => {
-        setUnitTime((hour * 3600 + minute * 60 + second*1) / inDis);
+        setUnitTime((hour * 3600 + minute * 60 + second * 1) / inDis);
     }, [hour, minute, second, inDis])
 
     useEffect(() => {
@@ -26,9 +26,9 @@ export default function Vdot() {
 
     const addOutput = () => {
         var tempOutDis = outDis;
-        if(tempOutDis[tempOutDis.length-1] == 0) return;
+        if (tempOutDis[tempOutDis.length - 1] == 0) return;
         tempOutDis.push(0);
-        if(tempOutDis.length == 11) tempOutDis.shift();
+        if (tempOutDis.length == 11) tempOutDis.shift();
         setOutDis(tempOutDis);
         setLastDis(0);
         setPlusColor('red');
@@ -37,61 +37,74 @@ export default function Vdot() {
         }, 500);
     }
 
+    const reset = () => {
+        setOutDis([0]);
+        setLastDis(0);
+        setHour('');
+        setMin('');
+        setSec('');
+    }
+
 
     return (
         <SafeAreaView style={styles.screen}>
-            <StatusBar style="auto" />
-            <View style={styles.buttonBox}>
-                <TextInput
-                    style={styles.fullInput}
-                    placeholder=""
-                    keyboardType="numeric"
-                    onChangeText={newText => setInDis(newText)}
-                    defaultValue={inDis}
-                />
-            </View>
-            <View style={styles.buttonBox}>
-                <TextInput
-                    style={styles.timeInput}
-                    placeholder=""
-                    keyboardType="numeric"
-                    onChangeText={newText => setHour(newText)}
-                    defaultValue={hour}
-                />
-                <Text style={styles.colon}>:</Text>
-                <TextInput
-                    style={styles.timeInput}
-                    placeholder=""
-                    keyboardType="numeric"
-                    onChangeText={newText => setMin(newText)}
-                    defaultValue={minute}
-                />
-                <Text style={styles.colon}>:</Text>
-                <TextInput
-                    style={styles.timeInput}
-                    placeholder=""
-                    keyboardType="numeric"
-                    onChangeText={newText => setSec(newText)}
-                    defaultValue={second}
-                />
-            </View>
-            <View style={styles.buttonBox}>
-                <TextInput
-                    style={styles.fullInput}
-                    placeholder=""
-                    keyboardType="numeric"
-                    onChangeText={newText => setLastDis(newText)}
-                    defaultValue={lastDis}
-                />
-            </View>
-            <View style={styles.output}>
-                <Text style={styles.outputText}>{output}</Text>
-                <FontAwesome name="plus" color={plusColor} style={styles.plus} onPress={addOutput} />
-            </View>
-            <View style={styles.buttonBox}>
-
-            </View>
-
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View>
+                    <StatusBar style="auto" />
+                    <View style={styles.buttonBox}>
+                        <TextInput
+                            style={styles.fullInput}
+                            placeholder=""
+                            keyboardType="numeric"
+                            onChangeText={newText => setInDis(newText)}
+                            defaultValue={inDis}
+                        />
+                    </View>
+                    <View style={styles.buttonBox}>
+                        <TextInput
+                            style={styles.timeInput}
+                            placeholder=""
+                            keyboardType="numeric"
+                            onChangeText={newText => setHour(newText)}
+                            defaultValue={hour}
+                        />
+                        <Text style={styles.colon}>:</Text>
+                        <TextInput
+                            style={styles.timeInput}
+                            placeholder=""
+                            keyboardType="numeric"
+                            onChangeText={newText => setMin(newText)}
+                            defaultValue={minute}
+                        />
+                        <Text style={styles.colon}>:</Text>
+                        <TextInput
+                            style={styles.timeInput}
+                            placeholder=""
+                            keyboardType="numeric"
+                            onChangeText={newText => setSec(newText)}
+                            defaultValue={second}
+                        />
+                    </View>
+                    <View style={styles.buttonBox}>
+                        <TextInput
+                            style={styles.fullInput}
+                            placeholder=""
+                            keyboardType="numeric"
+                            onChangeText={newText => setLastDis(newText)}
+                            defaultValue={lastDis}
+                        />
+                    </View>
+                    <View style={styles.output}>
+                        <Text style={styles.outputText}>{output}</Text>
+                        <FontAwesome name="plus" color={plusColor} style={styles.plus} onPress={addOutput} />
+                    </View>
+                    <View style={styles.buttonBox}>
+                        <TouchableOpacity style={styles.fullButton} title="Reset" onPress={reset}>
+                            <Text style={styles.buttonText}>Reset</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </TouchableWithoutFeedback>
         </SafeAreaView>
     );
 }
@@ -132,11 +145,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     output: {
-        flex: 9,
+        flex: 8,
         margin: windowWidth / 160,
         width: .95 * windowWidth,
         backgroundColor: '#fff',
         zIndex: -5,
+        position: 'relative',
     },
     half: {
         width: '50%',
@@ -227,6 +241,8 @@ const styles = StyleSheet.create({
     plus: {
         fontSize: normalize(30),
         backgroundColor: "#fff",
+        position: 'absolute',
+        right: 0,
     }
 
 

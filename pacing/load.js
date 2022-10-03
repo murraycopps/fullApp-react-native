@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, TouchableWithoutFeedback, Keyboard, SafeAreaView, Dimensions, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
 import { useState, Component, useEffect } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -14,6 +14,7 @@ export default function Pacing() {
     { label: 'Custom', value: 'custom' },
     { label: '800', value: 800 },
     { label: 'Mile', value: 1609.34 },
+    { label: '3k', value: 3000 },
     { label: 'Two Mile', value: 3218.68 },
     { label: '5k', value: 5000 },
     { label: '8k', value: 8000 },
@@ -49,57 +50,61 @@ export default function Pacing() {
   }
   return (
     <SafeAreaView style={styles.screen}>
-      <StatusBar style="auto" />
-      <View style={styles.buttonBox}>
-        <View style={styles.half}>
-          <TextInput
-            style={styles.timeInput}
-            placeholder=""
-            keyboardType="numeric"
-            onChangeText={newText => setMin(newText)}
-            defaultValue={minute}
-          />
-          <Text style={styles.colon}>:</Text>
-          <TextInput
-            style={styles.timeInput}
-            placeholder=""
-            keyboardType="numeric"
-            onChangeText={newText => setSec(newText)}
-            defaultValue={second}
-          />
-        </View>
-        <View style={styles.half}>
-          {isCustom ? <DropDownPicker
-            style={styles.dropDown}
-            open={open}
-            value={value}
-            items={items}
-            setOpen={setOpen}
-            setValue={setValue}
-            setIndex={setIndex}
-            setItems={setItems}
-            onChangeValue={toggleCustom}
-          /> : <View style={styles.custom}>
-            <TextInput style={styles.customInput} onChangeText={newText => setCustomDist(newText)} />
-            <FontAwesome style={styles.icon} name='ban' onPress={toggleCustom} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View>
+          <StatusBar style="auto" />
+          <View style={styles.buttonBox}>
+            <View style={styles.half}>
+              <TextInput
+                style={styles.timeInput}
+                placeholder=""
+                keyboardType="numeric"
+                onChangeText={newText => setMin(newText)}
+                defaultValue={minute}
+              />
+              <Text style={styles.colon}>:</Text>
+              <TextInput
+                style={styles.timeInput}
+                placeholder=""
+                keyboardType="numeric"
+                onChangeText={newText => setSec(newText)}
+                defaultValue={second}
+              />
+            </View>
+            <View style={styles.half}>
+              {isCustom ? <DropDownPicker
+                style={styles.dropDown}
+                open={open}
+                value={value}
+                items={items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setIndex={setIndex}
+                setItems={setItems}
+                onChangeValue={toggleCustom}
+              /> : <View style={styles.custom}>
+                <TextInput style={styles.customInput} onChangeText={newText => setCustomDist(newText)} />
+                <FontAwesome style={styles.icon} name='ban' onPress={toggleCustom} />
+              </View>
+
+
+              }
+            </View>
+
           </View>
-
-
-          }
+          <View style={[styles.buttonBox, { zIndex: -5 }]}>
+            <TouchableOpacity
+              style={styles.fullButton}
+              onPress={() => setPaceOrSplit(!isPace)}
+              underlayColor='#fff'>
+              <Text style={styles.buttonText}>Switch to {isPace ? <Text>Pace</Text> : <Text>Split</Text>}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.output}>
+            <Text style={styles.outputText}>{output}</Text>
+          </View>
         </View>
-
-      </View>
-      <View style={[styles.buttonBox, {zIndex:-5}]}>
-        <TouchableOpacity
-          style={styles.fullButton}
-          onPress={() => setPaceOrSplit(!isPace)}
-          underlayColor='#fff'>
-          <Text style={styles.buttonText}>Switch to {isPace ? <Text>Pace</Text> : <Text>Split</Text>}</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.output}>
-        <Text style={styles.outputText}>{output}</Text>
-      </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }
@@ -143,7 +148,7 @@ const styles = StyleSheet.create({
   output: {
     flex: 9,
     margin: windowWidth / 80,
-    width:  0.95 * windowWidth,
+    width: 0.95 * windowWidth,
     backgroundColor: '#fff',
     zIndex: -1,
   },
@@ -167,7 +172,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     backgroundColor: '#fff',
-    position: 'absolute',
     zIndex: -5,
   },
   buttonText: {

@@ -30,7 +30,7 @@ function NavBar({ navigation }) {
 function PacingScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.screen}>
-      <NavBar navigation={navigation} />
+      <NavBar style={styles.navBar} navigation={navigation} />
       <Pacing style={styles.importedScreen} />
     </SafeAreaView>
   );
@@ -39,7 +39,7 @@ function PacingScreen({ navigation }) {
 function VdotScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.screen}>
-      <NavBar navigation={navigation} />
+      <NavBar style={styles.navBar} navigation={navigation} />
 
       <Vdot style={styles.importedScreen} />
     </SafeAreaView>
@@ -49,7 +49,7 @@ function VdotScreen({ navigation }) {
 function UnusualScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.screen}>
-      <NavBar navigation={navigation} />
+      <NavBar style={styles.navBar} navigation={navigation} />
       <Unusual style={styles.importedScreen} />
     </SafeAreaView>
   );
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     width: '95%',
     justifyContent: 'center',
     flexDirection: 'row',
+    // position: 'absolute',
   },
   halfButton: {
     flex: 1,
@@ -99,4 +100,7 @@ const styles = StyleSheet.create({
   importedScreen: {
     width: '100%',
   },
+//  navBar: {
+//    flex: 1,
+//  }
 });
