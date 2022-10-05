@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
 
   },
   buttonBox: {
-    height: '6.666666666666667%',
+    height: '7.5%',
     margin: windowWidth / 80,
     width: '95%',
     justifyContent: 'center',
@@ -89,7 +89,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     backgroundColor: '#fff',
-    margin: 1,
+    marginLeft: 2,
+    marginRight: 2,
+    borderRadius: 100,
   },
   buttonText: {
     color: 'black',

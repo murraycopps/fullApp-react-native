@@ -54,7 +54,8 @@ export default function Vdot() {
                     <View style={styles.buttonBox}>
                         <TextInput
                             style={styles.fullInput}
-                            placeholder=""
+                            placeholder="Input Distance"
+                            placeholderTextColor="#878787"
                             keyboardType="numeric"
                             onChangeText={newText => setInDis(newText)}
                             defaultValue={inDis}
@@ -62,8 +63,9 @@ export default function Vdot() {
                     </View>
                     <View style={styles.buttonBox}>
                         <TextInput
-                            style={styles.timeInput}
-                            placeholder=""
+                            style={[styles.timeInput, styles.left]}
+                            placeholder="Hour"
+                            placeholderTextColor="#878787"
                             keyboardType="numeric"
                             onChangeText={newText => setHour(newText)}
                             defaultValue={hour}
@@ -71,15 +73,17 @@ export default function Vdot() {
                         <Text style={styles.colon}>:</Text>
                         <TextInput
                             style={styles.timeInput}
-                            placeholder=""
+                            placeholder="Min"
+                            placeholderTextColor="#878787"
                             keyboardType="numeric"
                             onChangeText={newText => setMin(newText)}
                             defaultValue={minute}
                         />
                         <Text style={styles.colon}>:</Text>
                         <TextInput
-                            style={styles.timeInput}
-                            placeholder=""
+                            style={[styles.timeInput, styles.right]}
+                            placeholder="Sec"
+                            placeholderTextColor="#878787"
                             keyboardType="numeric"
                             onChangeText={newText => setSec(newText)}
                             defaultValue={second}
@@ -88,7 +92,8 @@ export default function Vdot() {
                     <View style={styles.buttonBox}>
                         <TextInput
                             style={styles.fullInput}
-                            placeholder=""
+                            placeholder="Output Distance"
+                            placeholderTextColor="#878787"
                             keyboardType="numeric"
                             onChangeText={newText => setLastDis(newText)}
                             defaultValue={lastDis}
@@ -98,7 +103,7 @@ export default function Vdot() {
                         <Text style={styles.outputText}>{output}</Text>
                         <FontAwesome name="plus" color={plusColor} style={styles.plus} onPress={addOutput} />
                     </View>
-                    <View style={styles.buttonBox}>
+                    <View style={[styles.buttonBox, { marginTop: windowWidth / 40 }]}>
                         <TouchableOpacity style={styles.fullButton} title="Reset" onPress={reset}>
                             <Text style={styles.buttonText}>Reset</Text>
                         </TouchableOpacity>
@@ -151,6 +156,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         zIndex: -5,
         position: 'relative',
+        borderRadius: 30,
     },
     half: {
         width: '50%',
@@ -170,6 +176,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignContent: 'center',
         backgroundColor: '#fff',
+        borderRadius: 50,
     },
     buttonText: {
         color: 'black',
@@ -186,6 +193,15 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         fontSize: normalize(20),
     },
+    left: {
+        borderBottomLeftRadius: 50,
+        borderTopLeftRadius: 50,
+    },
+    right: {
+        borderBottomRightRadius: 50,
+        borderTopRightRadius: 50,
+    },
+
     fullInput: {
         width: '100%',
         height: '100%',
@@ -194,6 +210,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
         fontSize: normalize(20),
+        borderRadius: 50,
     },
     colon: {
         width: '4%',
@@ -240,9 +257,9 @@ const styles = StyleSheet.create({
     },
     plus: {
         fontSize: normalize(30),
-        backgroundColor: "#fff",
         position: 'absolute',
-        right: 0,
+        right: 4,
+        top: 4,
     }
 
 

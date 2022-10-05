@@ -2,6 +2,7 @@
   "expo": {
     "name": "fullApp-react-native",
     "slug": "fullApp-react-native",
+    "displayName": "Pacing App",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"

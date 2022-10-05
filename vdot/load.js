@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, TouchableWithoutFeedback, Keyboard, Button, SafeAreaView, Dimensions, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
-import { useState, Component, useEffect, useRef } from 'react';
+import { useState, Component, useEffect } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as vdot from './scripts.js';
@@ -33,7 +33,6 @@ export default function Vdot() {
     const [isTime, setTime] = useState(false);
     const [isTimeOverride, setTimeOverride] = useState(false);
 
-    const raceToggleRef = useRef(null);
     const [raceToggleButton, setRaceToggleButton] = useState();
     useEffect(() => {
         var distance;
@@ -59,31 +58,26 @@ export default function Vdot() {
         }
     }, [value])
 
-    useEffect(() => {
-        setRaceToggleButton(raceToggleRef.current);
-    }, [])
-
-    const changeVariables = event => {
+    const changeRace = () => {
         Keyboard.dismiss();
-         console.log(raceToggleButton._children);
-        if (raceToggleButton == event.target) {
-            // console.log("isRace: " + isRace);
-            if (!isRace) {
-                setTime(true);
-            }
-            else if (!isTimeOverride) {
-                setTime(false);
-            }
-            isRace ? setRace(false) : setRace(true);
+        if (!isRace) {
+            setTime(true);
         }
-        else if (!isRace) {
+        else if (!isTimeOverride) {
+            setTime(false);
+        }
+        isRace ? setRace(false) : setRace(true);
+
+    }
+
+    const changeTime = () => {
+        if (!isRace) {
             isTime ? setTime(false) : setTime(true);
             isTimeOverride ? setTimeOverride(false) : setTimeOverride(true);
 
         }
-
-
     }
+
     return (
         <SafeAreaView style={styles.screen}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -93,20 +87,23 @@ export default function Vdot() {
                         <View style={styles.half}>
                             <TextInput
                                 style={styles.timeInput}
-                                placeholder=""
+                                placeholder="Min"
+                                placeholderTextColor="#878787"
                                 keyboardType="numeric"
                                 onChangeText={newText => setMin(newText)}
                                 defaultValue={minute}
                             />
                             <Text style={styles.colon}>:</Text>
                             <TextInput
-                                style={styles.timeInput}
-                                placeholder=""
+                                style={[styles.timeInput, styles.right]}
+                                placeholder="Sec"
+                                placeholderTextColor="#878787"
                                 keyboardType="numeric"
                                 onChangeText={newText => setSec(newText)}
                                 defaultValue={second}
                             />
                         </View>
+                        <View style={styles.gap}></View>
                         <View style={styles.half}>
                             <DropDownPicker
                                 style={styles.dropDown}
@@ -125,27 +122,28 @@ export default function Vdot() {
                         </View>
 
                     </View>
-                    <View style={[styles.buttonBox, { zIndex: -5 }]}>
-                        <TouchableOpacity
-                            style={styles.halfButton}
-                            onPress={changeVariables}
-                            ref={raceToggleRef}
-                            underlayColor='#fff'>
-                            <Text style={styles.buttonText}>{isRace ? <Text>Training</Text> : <Text>Race</Text>}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.halfButton}
-                            onPress={changeVariables}
-                            underlayColor='#fff'>
-                            <Text style={styles.buttonText}>{isTime ? <Text>Pace</Text> : <Text>Time</Text>}</Text>
-                        </TouchableOpacity>
-                    </View>
+
                     <View style={styles.output}>
                         <Text style={styles.vdotText}>{myVdot}</Text>
                         <View style={styles.labelBox}>
                             <Text style={styles.labelOutput}>{label}</Text>
                             <Text style={styles.outputText}>{output}</Text>
                         </View>
+                    </View>
+                    <View style={[styles.buttonBox, { zIndex: -5, marginBottom: windowWidth / 40 }]}>
+                        <TouchableOpacity
+                            style={styles.halfButton}
+                            onPress={changeRace}
+                            underlayColor='#fff'>
+                            <Text style={styles.buttonText}>{isRace ? <Text>Training</Text> : <Text>Race</Text>}</Text>
+                        </TouchableOpacity>
+                        <View style={styles.gap}></View>
+                        <TouchableOpacity
+                            style={styles.halfButton}
+                            onPress={changeTime}
+                            underlayColor='#fff'>
+                            <Text style={styles.buttonText}>{isTime ? <Text>Pace</Text> : <Text>Time</Text>}</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </TouchableWithoutFeedback>
@@ -193,19 +191,26 @@ const styles = StyleSheet.create({
         width: .95 * windowWidth,
         backgroundColor: '#fff',
         zIndex: -5,
+        borderRadius: 30,
     },
     half: {
-        width: '50%',
+        width: '49%',
         justifyContent: 'center',
         alignContent: 'center',
         flexDirection: 'row',
+        borderRadius: 50,
+        backgroundColor: '#fff',
+    },
+    gap: {
+        width: '2%',
     },
     halfButton: {
-        width: '50%',
+        width: '49%',
         justifyContent: 'center',
         alignContent: 'center',
         backgroundColor: '#fff',
         zIndex: -1,
+        borderRadius: 50,
     },
     fullButton: {
         width: '100%',
@@ -217,7 +222,7 @@ const styles = StyleSheet.create({
         color: 'black',
         textAlign: 'center',
         paddingLeft: 10,
-        paddingRight: 10
+        paddingRight: 10,
     },
     timeInput: {
         width: '48%',
@@ -227,6 +232,14 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
         fontSize: normalize(20),
+        borderBottomLeftRadius: 50,
+        borderTopLeftRadius: 50,
+    },
+    right: {
+        borderBottomRightRadius: 50,
+        borderTopRightRadius: 50,
+        borderBottomLeftRadius: 0,
+        borderTopLeftRadius: 0,
     },
     colon: {
         width: '4%',
@@ -242,12 +255,14 @@ const styles = StyleSheet.create({
         borderWidth: 0,
         borderColor: '#fff',
         zIndex: 1000,
+        borderRadius: 50,
     },
     custom: {
         flex: 1,
         flexDirection: 'row',
         width: '100%',
         height: '100%',
+
     },
     customInput: {
         flex: 1,
