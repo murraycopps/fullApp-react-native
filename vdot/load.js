@@ -107,6 +107,7 @@ export default function Vdot() {
                         <View style={styles.half}>
                             <DropDownPicker
                                 style={styles.dropDown}
+                                placeholder='Distance'
                                 open={open}
                                 value={value}
                                 items={items}
@@ -234,6 +235,7 @@ const styles = StyleSheet.create({
         fontSize: normalize(20),
         borderBottomLeftRadius: 50,
         borderTopLeftRadius: 50,
+        textAlign: 'center',
     },
     right: {
         borderBottomRightRadius: 50,
@@ -287,10 +289,14 @@ const styles = StyleSheet.create({
         width: '100%',
         fontSize: normalize(40),
         textAlign: 'center',
+        marginTop: 15,
+        marginLeft: 15,
     },
     labelBox: {
         flex: 6,
         flexDirection: 'row',
+        marginLeft: 15,
+        marginRight: 15,
     },
     labelOutput: {
         fontSize: normalize(25),

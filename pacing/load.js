@@ -37,6 +37,7 @@ export default function Pacing() {
   const toggleCustom = () => {
     if (isCustom && value == 'custom') {
       setIsCustom(false);
+      setValue(-1);
     }
     else {
       setIsCustom(true);
@@ -76,6 +77,7 @@ export default function Pacing() {
             <View style={styles.gap}></View>
             <View style={styles.half}>
               {isCustom ? <DropDownPicker
+                placeholder='Distance'
                 style={styles.dropDown}
                 open={open}
                 value={value}
@@ -199,6 +201,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(20),
     borderBottomLeftRadius: 50,
     borderTopLeftRadius: 50,
+    textAlign: 'center',
   },
   right: {
     borderBottomRightRadius: 50,
@@ -232,8 +235,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     height: '100%',
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     fontSize: normalize(20),
+    borderBottomLeftRadius: 50,
+    borderTopLeftRadius: 50,
+    textAlign: 'center',
   },
   icon: {
     fontSize: normalize(30),
@@ -241,13 +247,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'red',
     justifyContent: 'center',
-    backgroundColor: "#fff",
-    paddingTop: '5%',
-    paddingBottom: '5%',
+    // backgroundColor: "#fff",
+    paddingTop: '6%',
+    paddingBottom: '6%',
+    paddingRight: '1%',
+    borderBottomRightRadius: 50,
+    borderTopRightRadius: 50,
   },
   outputText: {
     width: '100%',
     fontSize: normalize(25),
+    marginTop: 15,
+    marginLeft: 15,
   },
 
 

@@ -2,50 +2,56 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, Keyboard, TouchableWithoutFeedback, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
 import { useState, Component, useEffect, useRef } from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { calcuate } from './scripts.js';
+import { getXCScores, getTrackScores } from './scripts.js';
 
-export default function Unusual() {
-    const [unitTime, setUnitTime] = useState('');
+export default function Scoring() {
     const [output, setOutput] = useState('');
-    const [inDis, setInDis] = useState('');
-    const [outDis, setOutDis] = useState([0]);
-    const [lastDis, setLastDis] = useState(0);
-    const [hour, setHour] = useState('');
-    const [minute, setMin] = useState('');
-    const [second, setSec] = useState('');
-    const [plusColor, setPlusColor] = useState('black');
+    const [firstPlace, setFirstPlace] = useState('');
+    const [secondPlace, setSecondPlace] = useState('');
+    const [thirdPlace, setThirdPlace] = useState('');
+    const [forthPlace, setForthPlace] = useState('');
+    const [fifthPlace, setFifthPlace] = useState('');
+    const [sixthPlace, setSixthPlace] = useState('');
+    const [seventhPlace, setSeventhPlace] = useState('');
+    const [placeList, setPlaceList] = useState([firstPlace, secondPlace, thirdPlace, forthPlace, fifthPlace, sixthPlace, seventhPlace]);
+    const [isXC, setIsXC] = useState(true);
 
     useEffect(() => {
-        setUnitTime((hour * 3600 + minute * 60 + second * 1) / inDis);
-    }, [hour, minute, second, inDis])
-
-    useEffect(() => {
-        setOutput(calcuate(unitTime, outDis, lastDis));
-    }, [unitTime, outDis, lastDis])
-
-    const addOutput = () => {
-        var tempOutDis = outDis;
-        if (tempOutDis[tempOutDis.length - 1] == 0) return;
-        tempOutDis.push(0);
-        if (tempOutDis.length == 11) tempOutDis.shift();
-        setOutDis(tempOutDis);
-        setLastDis(0);
-        setPlusColor('red');
-        setTimeout(() => {
-            setPlusColor('black');
-        }, 500);
-    }
+        setPlaceList([firstPlace, secondPlace, thirdPlace, forthPlace, fifthPlace, sixthPlace, seventhPlace]);
+    }, [firstPlace, secondPlace, thirdPlace, forthPlace, fifthPlace, sixthPlace, seventhPlace]);
 
     const reset = () => {
-        setOutDis([0]);
-        setLastDis(0);
-        setHour('');
-        setMin('');
-        setSec('');
+        setFirstPlace('');
+        setSecondPlace('');
+        setThirdPlace('');
+        setForthPlace('');
+        setFifthPlace('');
+        setSixthPlace('');
+        setSeventhPlace('');
+        setPlaceList([firstPlace, secondPlace, thirdPlace, forthPlace, fifthPlace, sixthPlace, seventhPlace]);
     }
 
+    const toggleXC = () => {
+        setIsXC(!isXC);
+        setFirstPlace('');
+        setSecondPlace('');
+        setThirdPlace('');
+        setForthPlace(isXC ? '16' : '');
+        setFifthPlace('');
+        setSixthPlace('');
+        setSeventhPlace('');
+        setPlaceList([firstPlace, secondPlace, thirdPlace, forthPlace, fifthPlace, sixthPlace, seventhPlace]);
+    }
 
+    useEffect(() => {
+        runFunctions();
+    }, [placeList]);
+
+
+    const runFunctions = () => {
+        if (isXC) setOutput(getXCScores(placeList));
+        else setOutput(getTrackScores(placeList));
+    }
     return (
         <SafeAreaView style={styles.screen}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -54,57 +60,95 @@ export default function Unusual() {
                     <View style={styles.buttonBox}>
                         <TextInput
                             style={styles.fullInput}
-                            placeholder="Input Distance"
+                            placeholder={isXC ? "First Runner" : "Number of Firsts"}
                             placeholderTextColor="#878787"
                             keyboardType="numeric"
-                            onChangeText={newText => setInDis(newText)}
-                            defaultValue={inDis}
-                        />
-                    </View>
-                    <View style={styles.buttonBox}>
-                        <TextInput
-                            style={[styles.timeInput, styles.left]}
-                            placeholder="Hour"
-                            placeholderTextColor="#878787"
-                            keyboardType="numeric"
-                            onChangeText={newText => setHour(newText)}
-                            defaultValue={hour}
-                        />
-                        <Text style={styles.colon}>:</Text>
-                        <TextInput
-                            style={styles.timeInput}
-                            placeholder="Min"
-                            placeholderTextColor="#878787"
-                            keyboardType="numeric"
-                            onChangeText={newText => setMin(newText)}
-                            defaultValue={minute}
-                        />
-                        <Text style={styles.colon}>:</Text>
-                        <TextInput
-                            style={[styles.timeInput, styles.right]}
-                            placeholder="Sec"
-                            placeholderTextColor="#878787"
-                            keyboardType="numeric"
-                            onChangeText={newText => setSec(newText)}
-                            defaultValue={second}
+                            onChangeText={newText => setFirstPlace(newText)}
+                            value={firstPlace}
                         />
                     </View>
                     <View style={styles.buttonBox}>
                         <TextInput
                             style={styles.fullInput}
-                            placeholder="Output Distance"
+                            placeholder={isXC ? "Second Runners Place" : "Number of Seconds"}
                             placeholderTextColor="#878787"
                             keyboardType="numeric"
-                            onChangeText={newText => setLastDis(newText)}
-                            defaultValue={lastDis}
+                            onChangeText={newText => setSecondPlace(newText)}
+                            value={secondPlace}
                         />
                     </View>
-                    <View style={styles.output}>
-                        <Text style={styles.outputText}>{output}</Text>
-                        <FontAwesome name="plus" color={plusColor} style={styles.plus} onPress={addOutput} />
+                    <View style={styles.buttonBox}>
+                        <TextInput
+                            style={styles.fullInput}
+                            placeholder={isXC ? "Third Runners Place" : "Number of Thirds"}
+                            placeholderTextColor="#878787"
+                            keyboardType="numeric"
+                            onChangeText={newText => setThirdPlace(newText)}
+                            value={thirdPlace}
+                        />
+
                     </View>
+                    <View style={styles.buttonBox}>
+                        <TextInput
+                            style={styles.fullInput}
+                            placeholder={isXC ? "Forth Runners Place" : "Number of Events"}
+                            placeholderTextColor="#878787"
+                            keyboardType="numeric"
+                            onChangeText={newText => setForthPlace(newText)}
+                            value={forthPlace}
+                        />
+
+                    </View>
+                    {isXC ?
+                        <View style={styles.buttonBox}>
+                            <TextInput
+                                style={styles.fullInput}
+                                placeholder="Fifth Runners Place"
+                                placeholderTextColor="#878787"
+                                keyboardType="numeric"
+                                onChangeText={newText => setFifthPlace(newText)}
+                                value={fifthPlace}
+                            />
+
+                        </View> 
+                        : null}
+                        {isXC ?
+                        <View style={styles.buttonBox}>
+                            <TextInput
+                                style={styles.fullInput}
+                                placeholder="Sixth Runners Place"
+                                placeholderTextColor="#878787"
+                                keyboardType="numeric"
+                                onChangeText={newText => setSixthPlace(newText)}
+                                value={sixthPlace}
+                            />
+
+                        </View> 
+                        : null}
+                        {isXC ?
+                        <View style={styles.buttonBox}>
+                            <TextInput
+                                style={styles.fullInput}
+                                placeholder="Seventh Runners Place"
+                                placeholderTextColor="#878787"
+                                keyboardType="numeric"
+                                onChangeText={newText => setSeventhPlace(newText)}
+                                value={seventhPlace}
+                            />
+
+                        </View> 
+                        : null}
+
+                    <View style={[styles.output, { flex: isXC ? 3.5 : 4.5 }]}>
+                        <Text style={styles.outputText}>{output}</Text>
+                    </View>
+
                     <View style={[styles.buttonBox, { marginBottom: windowWidth / 40, marginTop: windowWidth / 80 }]}>
-                        <TouchableOpacity style={styles.fullButton} title="Reset" onPress={reset}>
+                        <TouchableOpacity style={styles.halfButton} title="Reset" onPress={toggleXC}>
+                            <Text style={styles.buttonText}>{isXC ? <Text>XC</Text> : <Text>Track</Text>}</Text>
+                        </TouchableOpacity>
+                        <View style={styles.gap}></View>
+                        <TouchableOpacity style={styles.halfButton} title="Reset" onPress={reset}>
                             <Text style={styles.buttonText}>Reset</Text>
                         </TouchableOpacity>
                     </View>
@@ -124,6 +168,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const scale = windowWidth / 320;
 
+var outputSize = 5.5;
 
 export function normalize(size) {
     const newSize = size * scale
@@ -150,7 +195,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     output: {
-        flex: 7.5,
         margin: windowWidth / 160,
         width: .95 * windowWidth,
         backgroundColor: '#fff',
@@ -164,12 +208,16 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         flexDirection: 'row',
     },
+    gap: {
+        width: '2%',
+    },
     halfButton: {
-        width: '50%',
+        width: '49%',
         justifyContent: 'center',
         alignContent: 'center',
         backgroundColor: '#fff',
         zIndex: -1,
+        borderRadius: 50,
     },
     fullButton: {
         width: '100%',

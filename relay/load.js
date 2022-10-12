@@ -2,49 +2,22 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, Keyboard, TouchableWithoutFeedback, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
 import { useState, Component, useEffect, useRef } from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { calcuate } from './scripts.js';
+import { addTimes } from './scripts.js';
 
-export default function Unusual() {
-    const [unitTime, setUnitTime] = useState('');
+export default function Relay() {
     const [output, setOutput] = useState('');
-    const [inDis, setInDis] = useState('');
-    const [outDis, setOutDis] = useState([0]);
-    const [lastDis, setLastDis] = useState(0);
-    const [hour, setHour] = useState('');
-    const [minute, setMin] = useState('');
-    const [second, setSec] = useState('');
-    const [plusColor, setPlusColor] = useState('black');
+    const [minOne, setMinOne] = useState('');
+    const [secOne, setSecOne] = useState('');
+    const [minTwo, setMinTwo] = useState('');
+    const [secTwo, setSecTwo] = useState('');
+    const [minThree, setMinThree] = useState('');
+    const [secThree, setSecThree] = useState('');
+    const [minFour, setMinFour] = useState('');
+    const [secFour, setSecFour] = useState('');
 
     useEffect(() => {
-        setUnitTime((hour * 3600 + minute * 60 + second * 1) / inDis);
-    }, [hour, minute, second, inDis])
-
-    useEffect(() => {
-        setOutput(calcuate(unitTime, outDis, lastDis));
-    }, [unitTime, outDis, lastDis])
-
-    const addOutput = () => {
-        var tempOutDis = outDis;
-        if (tempOutDis[tempOutDis.length - 1] == 0) return;
-        tempOutDis.push(0);
-        if (tempOutDis.length == 11) tempOutDis.shift();
-        setOutDis(tempOutDis);
-        setLastDis(0);
-        setPlusColor('red');
-        setTimeout(() => {
-            setPlusColor('black');
-        }, 500);
-    }
-
-    const reset = () => {
-        setOutDis([0]);
-        setLastDis(0);
-        setHour('');
-        setMin('');
-        setSec('');
-    }
-
+        setOutput(addTimes(minOne, secOne, minTwo, secTwo, minThree, secThree, minFour, secFour));
+    }, [minOne, secOne, minTwo, secTwo, minThree, secThree, minFour, secFour]);
 
     return (
         <SafeAreaView style={styles.screen}>
@@ -53,31 +26,12 @@ export default function Unusual() {
                     <StatusBar style="auto" />
                     <View style={styles.buttonBox}>
                         <TextInput
-                            style={styles.fullInput}
-                            placeholder="Input Distance"
-                            placeholderTextColor="#878787"
-                            keyboardType="numeric"
-                            onChangeText={newText => setInDis(newText)}
-                            defaultValue={inDis}
-                        />
-                    </View>
-                    <View style={styles.buttonBox}>
-                        <TextInput
-                            style={[styles.timeInput, styles.left]}
-                            placeholder="Hour"
-                            placeholderTextColor="#878787"
-                            keyboardType="numeric"
-                            onChangeText={newText => setHour(newText)}
-                            defaultValue={hour}
-                        />
-                        <Text style={styles.colon}>:</Text>
-                        <TextInput
                             style={styles.timeInput}
                             placeholder="Min"
                             placeholderTextColor="#878787"
                             keyboardType="numeric"
-                            onChangeText={newText => setMin(newText)}
-                            defaultValue={minute}
+                            onChangeText={newText => setMinOne(newText)}
+                            defaultValue={minOne}
                         />
                         <Text style={styles.colon}>:</Text>
                         <TextInput
@@ -85,26 +39,73 @@ export default function Unusual() {
                             placeholder="Sec"
                             placeholderTextColor="#878787"
                             keyboardType="numeric"
-                            onChangeText={newText => setSec(newText)}
-                            defaultValue={second}
+                            onChangeText={newText => setSecOne(newText)}
+                            defaultValue={secOne}
                         />
                     </View>
                     <View style={styles.buttonBox}>
                         <TextInput
-                            style={styles.fullInput}
-                            placeholder="Output Distance"
+                            style={styles.timeInput}
+                            placeholder="Min"
                             placeholderTextColor="#878787"
                             keyboardType="numeric"
-                            onChangeText={newText => setLastDis(newText)}
-                            defaultValue={lastDis}
+                            onChangeText={newText => setMinTwo(newText)}
+                            defaultValue={minTwo}
+                        />
+                        <Text style={styles.colon}>:</Text>
+                        <TextInput
+                            style={[styles.timeInput, styles.right]}
+                            placeholder="Sec"
+                            placeholderTextColor="#878787"
+                            keyboardType="numeric"
+                            onChangeText={newText => setSecTwo(newText)}
+                            defaultValue={secTwo}
+                        />
+                    </View>
+                    <View style={styles.buttonBox}>
+                        <TextInput
+                            style={styles.timeInput}
+                            placeholder="Min"
+                            placeholderTextColor="#878787"
+                            keyboardType="numeric"
+                            onChangeText={newText => setMinThree(newText)}
+                            defaultValue={minThree}
+                        />
+                        <Text style={styles.colon}>:</Text>
+                        <TextInput
+                            style={[styles.timeInput, styles.right]}
+                            placeholder="Sec"
+                            placeholderTextColor="#878787"
+                            keyboardType="numeric"
+                            onChangeText={newText => setSecThree(newText)}
+                            defaultValue={secThree}
+                        />
+                    </View>
+                    <View style={styles.buttonBox}>
+                        <TextInput
+                            style={styles.timeInput}
+                            placeholder="Min"
+                            placeholderTextColor="#878787"
+                            keyboardType="numeric"
+                            onChangeText={newText => setMinFour(newText)}
+                            defaultValue={minFour}
+                        />
+                        <Text style={styles.colon}>:</Text>
+                        <TextInput
+                            style={[styles.timeInput, styles.right]}
+                            placeholder="Sec"
+                            placeholderTextColor="#878787"
+                            keyboardType="numeric"
+                            onChangeText={newText => setSecFour(newText)}
+                            defaultValue={secFour}
                         />
                     </View>
                     <View style={styles.output}>
                         <Text style={styles.outputText}>{output}</Text>
-                        <FontAwesome name="plus" color={plusColor} style={styles.plus} onPress={addOutput} />
                     </View>
+
                     <View style={[styles.buttonBox, { marginBottom: windowWidth / 40, marginTop: windowWidth / 80 }]}>
-                        <TouchableOpacity style={styles.fullButton} title="Reset" onPress={reset}>
+                        <TouchableOpacity style={styles.fullButton} title="Reset">
                             <Text style={styles.buttonText}>Reset</Text>
                         </TouchableOpacity>
                     </View>
@@ -124,6 +125,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const scale = windowWidth / 320;
 
+var outputSize = 5.5;
 
 export function normalize(size) {
     const newSize = size * scale
@@ -150,7 +152,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     output: {
-        flex: 7.5,
+        flex: 6.5,
         margin: windowWidth / 160,
         width: .95 * windowWidth,
         backgroundColor: '#fff',
@@ -164,12 +166,16 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         flexDirection: 'row',
     },
+    gap: {
+        width: '2%',
+    },
     halfButton: {
-        width: '50%',
+        width: '49%',
         justifyContent: 'center',
         alignContent: 'center',
         backgroundColor: '#fff',
         zIndex: -1,
+        borderRadius: 50,
     },
     fullButton: {
         width: '100%',
@@ -185,24 +191,23 @@ const styles = StyleSheet.create({
         paddingRight: 10
     },
     timeInput: {
-        width: '30.66666666666667%',
+        width: '48%',
         height: '100%',
         backgroundColor: "#fff",
         color: 'black',
         paddingLeft: 10,
         paddingRight: 10,
         fontSize: normalize(20),
-        textAlign: 'center',
-    },
-    left: {
         borderBottomLeftRadius: 50,
         borderTopLeftRadius: 50,
-    },
+        textAlign: 'center',
+      },
     right: {
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0,
         borderBottomRightRadius: 50,
         borderTopRightRadius: 50,
     },
-
     fullInput: {
         width: '100%',
         height: '100%',
@@ -252,18 +257,12 @@ const styles = StyleSheet.create({
         paddingTop: '5%',
         paddingBottom: '5%',
     },
-
     outputText: {
-        fontSize: normalize(25),
+        fontSize: normalize(35),
+        textAlign: 'center',
         marginTop: 15,
         marginLeft: 15,
     },
-    plus: {
-        fontSize: normalize(30),
-        position: 'absolute',
-        right: 4,
-        top: 4,
-    }
-
+  
 
 });
