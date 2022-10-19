@@ -6,13 +6,15 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import calc from './scripts.js';
 
-export default function Pacing() {
+export default function Pacing(settings) {
   const [isPace, setPaceOrSplit] = useState(true);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
     { label: 'Custom', value: 'custom' },
     { label: '800', value: 800 },
+    { label: '1000', value: 1000 },
+    { label: '1500', value: 1500 },
     { label: 'Mile', value: 1609.34 },
     { label: '3k', value: 3000 },
     { label: 'Two Mile', value: 3218.68 },
@@ -30,7 +32,7 @@ export default function Pacing() {
 
 
   useEffect(() => {
-    setOutput(calc(index, minute, second, customDist, isPace));
+    setOutput(calc(index, minute, second, customDist, isPace, settings));
   }, [isPace, value, minute, second, customDist, index]);
 
 

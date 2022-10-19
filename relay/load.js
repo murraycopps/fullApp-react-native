@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 50,
         borderTopLeftRadius: 50,
         textAlign: 'center',
-      },
+    },
     right: {
         borderTopLeftRadius: 0,
         borderBottomLeftRadius: 0,
@@ -263,6 +263,6 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginLeft: 15,
     },
-  
+
 
 });

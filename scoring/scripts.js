@@ -1,7 +1,7 @@
 function addPlaces(list) {
     var total = 0;
     for (var i = 0; i < 5; i++) {
-        total += list[i]*1;
+        total += list[i] * 1;
     }
     return total;
 
@@ -33,11 +33,12 @@ export function getXCScores(list) {
     return out;
 }
 
-export function getTrackScores(list) {
+export function getTrackScores(list, numEvents) {
+    console.log(numEvents);
     var myScore = 5 * list[0] + 3 * list[1] + 1 * list[2];
-    var numEvents = list[3];
     var maxScore = 9 * numEvents;
     var otherScore = maxScore - myScore;
-    var out = "Your Score is: " + myScore + "\nOther Score is: " + otherScore;
+    console.log("otherScore: " + otherScore);
+    var out = "Your Score is: " + myScore + (otherScore > 0 ? ("\nOther Score is: " + otherScore) : '');
     return out;
 }

@@ -2,10 +2,8 @@
   
   export function calcuate(unitTime, outDis, lastDis) {
     var tempOutDis = outDis;
-    // console.log("calcuate " + tempOutDis);
     tempOutDis[tempOutDis.length-1]=lastDis;
     if (!isFinite(unitTime) || isNaN(unitTime) || isNaN(lastDis)) {
-      console.log("variables not defined");
       return;
     }
     var outputList = [];

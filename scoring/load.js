@@ -3,8 +3,24 @@ import React from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, Keyboard, TouchableWithoutFeedback, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
 import { useState, Component, useEffect, useRef } from 'react';
 import { getXCScores, getTrackScores } from './scripts.js';
+import DropDownPicker from 'react-native-dropdown-picker';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function Scoring() {
+
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(null);
+    const [items, setItems] = useState([
+        { label: 'Indoor', value: 10 },
+        { label: 'Outdoor', value: 16 },
+        { label: "Professional", value: 21 },
+        { label: "Custom", value: "custom" }
+    ]);
+    const [index, setIndex] = useState(-1);
+    const [isCustom, setIsCustom] = useState(true);
+    const [customDist, setCustomDist] = useState('');
+
+
     const [output, setOutput] = useState('');
     const [firstPlace, setFirstPlace] = useState('');
     const [secondPlace, setSecondPlace] = useState('');
@@ -33,25 +49,36 @@ export default function Scoring() {
 
     const toggleXC = () => {
         setIsXC(!isXC);
-        setFirstPlace('');
-        setSecondPlace('');
-        setThirdPlace('');
-        setForthPlace(isXC ? '16' : '');
-        setFifthPlace('');
-        setSixthPlace('');
-        setSeventhPlace('');
-        setPlaceList([firstPlace, secondPlace, thirdPlace, forthPlace, fifthPlace, sixthPlace, seventhPlace]);
+        reset();
     }
 
     useEffect(() => {
         runFunctions();
-    }, [placeList]);
+    }, [placeList, value]);
 
 
     const runFunctions = () => {
         if (isXC) setOutput(getXCScores(placeList));
-        else setOutput(getTrackScores(placeList));
+        else if (!isCustom) setOutput(getTrackScores(placeList, customDist));
+        else setOutput(getTrackScores(placeList, value));
     }
+
+    const toggleCustom = () => {
+        if (isCustom && value == 'custom') {
+            setIsCustom(false);
+            setValue(null);
+        }
+        else {
+            setIsCustom(true);
+        }
+
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].value == value) {
+                setIndex(i);
+            }
+        }
+    }
+
     return (
         <SafeAreaView style={styles.screen}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -88,15 +115,35 @@ export default function Scoring() {
                         />
 
                     </View>
-                    <View style={styles.buttonBox}>
-                        <TextInput
-                            style={styles.fullInput}
-                            placeholder={isXC ? "Forth Runners Place" : "Number of Events"}
-                            placeholderTextColor="#878787"
-                            keyboardType="numeric"
-                            onChangeText={newText => setForthPlace(newText)}
-                            value={forthPlace}
-                        />
+                    <View style={[styles.buttonBox, { backgroundColor: '#fff', borderRadius: 50, }]}>
+                        {isXC ?
+                            <TextInput
+                                style={styles.fullInput}
+                                placeholder={isXC ? "Forth Runners Place" : "Number of Events"}
+                                placeholderTextColor="#878787"
+                                keyboardType="numeric"
+                                onChangeText={newText => setForthPlace(newText)}
+                                value={forthPlace}
+                            /> :
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                                {isCustom ?
+                                    <DropDownPicker
+                                        placeholder='Set Number of Events'
+                                        style={styles.dropDown}
+                                        open={open}
+                                        value={value}
+                                        items={items}
+                                        setOpen={setOpen}
+                                        setValue={setValue}
+                                        setItems={setItems}
+                                        setIndex={setIndex}
+                                        onChangeValue={toggleCustom}
+                                    /> : <View style={styles.custom}>
+                                        <TextInput placeholder='Enter Number Of Events' style={styles.customInput} onChangeText={newText => setCustomDist(newText)} />
+                                        <FontAwesome style={styles.icon} name='ban' onPress={toggleCustom} />
+                                    </View>}
+                            </View>
+                        }
 
                     </View>
                     {isXC ?
@@ -110,9 +157,9 @@ export default function Scoring() {
                                 value={fifthPlace}
                             />
 
-                        </View> 
+                        </View>
                         : null}
-                        {isXC ?
+                    {isXC ?
                         <View style={styles.buttonBox}>
                             <TextInput
                                 style={styles.fullInput}
@@ -123,9 +170,9 @@ export default function Scoring() {
                                 value={sixthPlace}
                             />
 
-                        </View> 
+                        </View>
                         : null}
-                        {isXC ?
+                    {isXC ?
                         <View style={styles.buttonBox}>
                             <TextInput
                                 style={styles.fullInput}
@@ -136,10 +183,10 @@ export default function Scoring() {
                                 value={seventhPlace}
                             />
 
-                        </View> 
+                        </View>
                         : null}
 
-                    <View style={[styles.output, { flex: isXC ? 3.5 : 4.5 }]}>
+                    <View style={[styles.output, { flex: isXC ? 3.5 : 6.5 }]}>
                         <Text style={styles.outputText}>{output}</Text>
                     </View>
 
@@ -271,7 +318,7 @@ const styles = StyleSheet.create({
     },
     dropDown: {
         height: '100%',
-        borderRadius: 0,
+        borderRadius: 50,
         borderWidth: 0,
         borderColor: '#fff',
         zIndex: 1000,
@@ -287,8 +334,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         height: '100%',
-        backgroundColor: "#fff",
         fontSize: normalize(20),
+        borderBottomLeftRadius: 50,
+        borderTopLeftRadius: 50,
+        textAlign: 'center',
     },
     icon: {
         fontSize: normalize(30),
@@ -296,9 +345,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'red',
         justifyContent: 'center',
-        backgroundColor: "#fff",
-        paddingTop: '5%',
-        paddingBottom: '5%',
+        paddingTop: '3%',
+        paddingBottom: '3%',
+        paddingRight: '1%',
+        borderBottomRightRadius: 50,
+        borderTopRightRadius: 50,
     },
 
     outputText: {
