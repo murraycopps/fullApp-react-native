@@ -22,7 +22,7 @@ import { storage } from './settings/storage.js';
 
 const Stack = createNativeStackNavigator();
 function NavBar({ navigation, page, settings, setSettings }) {
-  
+
   const fullList = [
     { label: 'Pacing', value: 'Pacing' },
     { label: 'Vdot', value: 'Vdot' },
@@ -36,10 +36,10 @@ function NavBar({ navigation, page, settings, setSettings }) {
   const [defaultPage, setDefaultPage] = useState(settings['defaultPage']);
   const [secondPage, setSecondPage] = useState(settings['secondPage']);
 
-useEffect(() => {
-  setDefaultPage(settings['defaultPage']);
-  setSecondPage(settings['secondPage']);
-}, [settings]);
+  useEffect(() => {
+    setDefaultPage(settings['defaultPage']);
+    setSecondPage(settings['secondPage']);
+  }, [settings]);
 
   useEffect(() => {
     setItems(fullList.filter(item => item.value != defaultPage && item.value != secondPage));
@@ -161,12 +161,12 @@ function TimerScreen({ navigation, settings, setSettings }) {
 function SettingsScreen({ navigation, settings, setSettings }) {
   const newPage = 'Settings';
   const [defaultValue, setDefaultValue] = useState(settings['defaultPage']);
-  const [secondValue, setSecondValue] = useState(settings['secondPage']); 
+  const [secondValue, setSecondValue] = useState(settings['secondPage']);
   const [isImperial, setIsImperial] = useState(settings['imperial']);
 
 
   useEffect(() => {
-    if(defaultValue == settings['defaultPage'] && secondValue == settings['secondPage'] && isImperial == settings['imperial']) return;
+    if (defaultValue == settings['defaultPage'] && secondValue == settings['secondPage'] && isImperial == settings['imperial']) return;
     setSettings({ defaultPage: defaultValue, secondPage: secondValue, imperial: isImperial, loaded: true });
   }, [defaultValue, secondValue, isImperial]);
 
@@ -182,39 +182,41 @@ function LoadingScreen({ navigation, settings, setSettings }) {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     storage
-  .load({
-    key: 'Settings',
-    syncParams: {
-      extraFetchOptions: {
-        // blahblah
-      },
-      someFlag: true
-    }
-  })
-  .then(ret => {
-    // found data go to then()
-    console.log('settings,ret: '  , {...settings, ...ret})
-    setSettings({...settings, ...ret});
-    setLoaded(ret.loaded);
-  })
-  .catch(err => {
-    // any exception including data not found
-    // goes to catch()
-    console.warn(err.message);
-    switch (err.name) {
-      case 'NotFoundError':
-        // TODO;
-        break;
-      case 'ExpiredError':
-        // TODO
-        break;
-    }
-  });
+      .load({
+        key: 'Settings',
+        syncParams: {
+          extraFetchOptions: {
+            // blahblah
+          },
+          someFlag: true
+        }
+      })
+      .then(ret => {
+        // found data go to then()
+        console.log('settings,ret: ', { ...settings, ...ret })
+        setSettings({ ...settings, ...ret });
+        setLoaded(ret.loaded);
+      })
+      .catch(err => {
+        // any exception including data not found
+        // goes to catch()
+        console.warn(err.message);
+        switch (err.name) {
+          case 'NotFoundError':
+            // TODO;
+            saveNew('Settings', { loaded: true });
+            setLoaded(true);
+            break;
+          case 'ExpiredError':
+            // TODO
+            break;
+        }
+      });
   }, []);
 
   useEffect(() => {
     console.log('loaded: ' + loaded);
-    if(loaded)  navigation.navigate(settings['defaultPage']);
+    if (loaded) navigation.navigate(settings['defaultPage']);
   }, [loaded]);
 
   useEffect(() => {
@@ -236,12 +238,13 @@ export default function App() {
 
   useEffect(() => {
     console.log('settings.loaded: ', settings.loaded);
-    if(settings.loaded) {
-      console.log("a"); 
-      saveNew('Settings', settings);}
+    if (settings.loaded) {
+      console.log("a");
+      saveNew('Settings', settings);
+    }
     loadSetSettings('Settings');
   }, [settings]);
-    
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={'Loading'} screenOptions={{ headerShown: false }}>
@@ -264,7 +267,7 @@ export default function App() {
           {props => <RelayScreen {...props} settings={settings} setSettings={setSettings} />}
         </Stack.Screen>
         <Stack.Screen name="Timer">
-            {props => <TimerScreen {...props} settings={settings} setSettings={setSettings} />}
+          {props => <TimerScreen {...props} settings={settings} setSettings={setSettings} />}
         </Stack.Screen>
         <Stack.Screen name="Settings">
           {props => <SettingsScreen {...props} settings={settings} setSettings={setSettings} />}
