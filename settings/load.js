@@ -6,7 +6,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { loadSetSettings, setSettings, settings, saveNew } from './settings.js';
 
-export default function Settings({defaultValue, setDefaultValue, secondValue, setSecondValue, isImperial, setIsImperial}) {
+export default function Settings({ defaultValue, setDefaultValue, secondValue, setSecondValue, isImperial, setIsImperial }) {
     const fullList = [
         { label: 'Pacing', value: 'Pacing' },
         { label: 'Vdot', value: 'Vdot' },
@@ -14,6 +14,7 @@ export default function Settings({defaultValue, setDefaultValue, secondValue, se
         { label: 'Scoring', value: 'Scoring' },
         { label: 'Relay', value: "Relay" },
         { label: 'Timer', value: 'Timer' },
+        { label: 'Conversion', value: 'Conversion' },
     ];
 
     const [defaultOpen, setDefaultOpen] = useState(false);

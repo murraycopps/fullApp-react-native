@@ -7,24 +7,15 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as vdot from './scripts.js';
 import { DISTANCES, vdotTable } from './table.js';
 
-export default function Vdot() {
+export default function Vdot({ isImperial }) {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        { label: '1500', value: 1500 },
-        { label: 'Mile', value: 1609.34 },
-        { label: '3000', value: 3000 },
-        { label: 'Two Mile', value: 3218.68 },
-        { label: '5k', value: 5000 },
-        { label: '10k', value: 10000 },
-        { label: '15k', value: 15000 },
-        { label: 'Half Marathon', value: 21097.5 },
-        { label: 'Marathon', value: 42195 },
-    ]);
+    const [items, setItems] = useState(DISTANCES);
 
 
     const [minute, setMin] = useState('');
     const [second, setSec] = useState('');
+    const [hour, setHour] = useState('');
     const [index, setIndex] = useState(-1);
     const [myVdot, setVdot] = useState();
     const [label, setLabel] = useState();
@@ -33,22 +24,22 @@ export default function Vdot() {
     const [isTime, setTime] = useState(false);
     const [isTimeOverride, setTimeOverride] = useState(false);
 
-    const [raceToggleButton, setRaceToggleButton] = useState();
     useEffect(() => {
         var distance;
         if (index != -1) {
             distance = DISTANCES[index];
-            var myVdotTemp = vdot.findVdot(minute * 60 + second * 1, distance);
-            setVdot("Vdot: " + myVdotTemp["vdotDec"]);
+            var myVdotTemp = vdot.findVdot(3600 * hour + minute * 60 + second * 1, distance);
+            setVdot("Vdot: " + (myVdotTemp == 0 ? 0 : myVdotTemp["vdotDec"]));
 
-            var outputs = vdot.extractVdotTimes(myVdotTemp, isRace, isTime);
+            var outputs = vdot.extractVdotTimes(myVdotTemp, isRace, isTime, isImperial);
             setOutput(outputs.join('\n'));
 
             var outputLables = vdot.getVdotLables(isRace);
             setLabel(outputLables.join('\n'));
         }
-    }, [isRace, index, minute, second, isTime]);
+    }, [isRace, index, hour, minute, second, isTime]);
 
+    
 
     useEffect(() => {
         for (let i = 0; i < items.length; i++) {
@@ -56,6 +47,7 @@ export default function Vdot() {
                 setIndex(i);
             }
         }
+        if(value != 'DISTANCE_MARATHON' && value != 'DISTANCE_HALF') setHour(0);
     }, [value])
 
     const changeRace = () => {
@@ -84,9 +76,21 @@ export default function Vdot() {
                 <View>
                     <StatusBar style="auto" />
                     <View style={styles.buttonBox}>
-                        <View style={styles.half}>
+                        <View style={[styles.half, value == 'DISTANCE_MARATHON' || value == 'DISTANCE_HALF' ? { flex: 3 } : null]}>
+                            {value == 'DISTANCE_MARATHON' || value == 'DISTANCE_HALF' ?
+                                <><TextInput
+                                    style={[styles.timeInput, styles.left]}
+                                    placeholder="Hour"
+                                    placeholderTextColor="#878787"
+                                    keyboardType="numeric"
+                                    onChangeText={newText => setHour(newText)}
+                                    defaultValue={hour}
+                                />
+                                    <Text style={styles.colon}>:</Text></>
+                                : null}
+
                             <TextInput
-                                style={styles.timeInput}
+                                style={[styles.timeInput, value == 'DISTANCE_MARATHON' || value == 'DISTANCE_HALF' ? null : styles.left]}
                                 placeholder="Min"
                                 placeholderTextColor="#878787"
                                 keyboardType="numeric"
@@ -127,8 +131,8 @@ export default function Vdot() {
                     <View style={styles.output}>
                         <Text style={styles.vdotText}>{myVdot}</Text>
                         <View style={styles.labelBox}>
-                            <Text style={styles.labelOutput}>{label}</Text>
-                            <Text style={styles.outputText}>{output}</Text>
+                            <Text style={[styles.labelOutput, isRace ? { flex: 2 } : { flex: 3 }]}>{label}</Text>
+                            <Text style={[styles.outputText, isRace ? { flex: 3 } : { flex: 2 }]}>{output}</Text>
                         </View>
                     </View>
                     <View style={[styles.buttonBox, { zIndex: -5, marginBottom: windowWidth / 40 }]}>
@@ -195,7 +199,7 @@ const styles = StyleSheet.create({
         borderRadius: 30,
     },
     half: {
-        width: '49%',
+        flex: 2,
         justifyContent: 'center',
         alignContent: 'center',
         flexDirection: 'row',
@@ -226,25 +230,27 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
     timeInput: {
-        width: '48%',
+        // width: '48%',
+        flex: 48,
         height: '100%',
         backgroundColor: "#fff",
         color: 'black',
-        paddingLeft: 10,
-        paddingRight: 10,
         fontSize: normalize(20),
+        textAlign: 'center',
+    },
+    left: {
         borderBottomLeftRadius: 50,
         borderTopLeftRadius: 50,
-        textAlign: 'center',
+        paddingLeft: 10,
     },
     right: {
         borderBottomRightRadius: 50,
         borderTopRightRadius: 50,
-        borderBottomLeftRadius: 0,
-        borderTopLeftRadius: 0,
+        paddingRight: 10,
     },
     colon: {
-        width: '4%',
+        // width: '4%',
+        flex: 8,
         height: '100%',
         textAlign: 'center',
         justifyContent: 'center',

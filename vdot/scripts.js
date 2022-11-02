@@ -15,7 +15,8 @@ export function getVdotLables(isRace) {
     return lables;
 }
 
-export function extractVdotTimes(myVdotTemp, isRace, isTime) {
+export function extractVdotTimes(myVdotTemp, isRace, isTime, isImperial) {
+    if(myVdotTemp == 0) return isRace? ['0:00-0:00','0:00.0','0:00.0','0:00.0','0:00.0','','','','','',''] : ['0:00.0','0:00.0','0:00.0','0:00.0','0:00.0','0:00.0','0:00.0','0:00.0','0:00.0','0:00.0','0:00.0'];
     var myVdot = myVdotTemp["vdot"];
     var timeOff = myVdotTemp["timeOff"];
     var myVdotTimes = [];
@@ -25,7 +26,7 @@ export function extractVdotTimes(myVdotTemp, isRace, isTime) {
             if (isTime) {
                 var tempVdotDis = DISTANCES[i]["distance"];
                 var meterTime = tempVdotTime / tempVdotDis;
-                tempVdotTime = meterTime * 1609;
+                tempVdotTime = meterTime * (isImperial? 1609.34 : 1000);
             }
             myVdotTimes.push(outTime(tempVdotTime));
         }
@@ -33,13 +34,14 @@ export function extractVdotTimes(myVdotTemp, isRace, isTime) {
 
     else {
         var options = ["e", "m", "t", "i", "r"];
+        var convert = isImperial? 1 : 1000/1609.34;
 
         for (var i = 0; i < options.length; i++) {
             if (i < 3) {
-                var tempVdotTime = vdotTable["PACES"][myVdot][options[i]]["mile"] * timeOff;
+                var tempVdotTime = vdotTable["PACES"][myVdot][options[i]]["mile"] * convert * timeOff;
             }
             else {
-                var tempVdotTime = vdotTable["PACES"][myVdot][options[i]]["400m"] * 4.0225 * timeOff;
+                var tempVdotTime = vdotTable["PACES"][myVdot][options[i]]["400m"] * (isImperial? 4.0225 : 2.5) * timeOff;
 
             }
             myVdotTimes.push(outTime(tempVdotTime));
@@ -49,7 +51,10 @@ export function extractVdotTimes(myVdotTemp, isRace, isTime) {
             myVdotTimes.push("");
         }
         var tempVdotTime = vdotTable["PACES"][myVdot]["e"]["mile"];
-        myVdotTimes[0] = outTime(tempVdotTime - 13) + "-" + outTime(tempVdotTime + 27);
+        console.log(myVdot);
+        console.log(vdotTable["PACES"][myVdot]);
+        console.log(tempVdotTime);
+        myVdotTimes[0] = outTime(Math.round((tempVdotTime - 13)*convert)) + "-" + outTime(Math.round((tempVdotTime + 27)*convert));
     }
 
     return myVdotTimes;
@@ -57,6 +62,7 @@ export function extractVdotTimes(myVdotTemp, isRace, isTime) {
 
 
 export function findVdot(myTime, distance) {
+    if(isNaN(myTime) || myTime == 0) return 0;
     var index = 0;
     var timeOff;
     var vdotOff;

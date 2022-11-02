@@ -9,6 +9,7 @@ import Scoring from './scoring/load.js';
 import Relay from './relay/load.js';
 import Timer from './timer/load.js';
 import Settings from './settings/load.js';
+import TimeConversion from './time-conversion/load.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NativeScreenNavigationContainer } from 'react-native-screens';
@@ -16,9 +17,6 @@ import { back } from 'react-native/Libraries/Animated/Easing.js';
 import { TouchableWithoutFeedback } from 'react-native-web';
 import { loadSetSettings, saveNew } from './settings/settings.js';
 import { storage } from './settings/storage.js';
-
-
-// setSettings({defaultPage: 'Settings'});
 
 const Stack = createNativeStackNavigator();
 function NavBar({ navigation, page, settings, setSettings }) {
@@ -30,6 +28,7 @@ function NavBar({ navigation, page, settings, setSettings }) {
     { label: 'Scoring', value: 'Scoring' },
     { label: 'Relay', value: "Relay" },
     { label: 'Timer', value: 'Timer' },
+    { label: 'Convert', value: 'Conversion' },
     { label: 'Settings', value: 'Settings' },
   ];
 
@@ -112,10 +111,11 @@ function PacingScreen({ navigation, settings, setSettings }) {
 
 function VdotScreen({ navigation, settings, setSettings }) {
   const newPage = 'Vdot';
+  // console.log('vdot screen',settings['imperial']);
   return (
     <SafeAreaView style={styles.screen}>
       <NavBar style={styles.navBar} navigation={navigation} settings={settings} setSettings={setSettings} page={newPage} />
-      <Vdot style={styles.importedScreen} />
+      <Vdot style={styles.importedScreen} isImperial={settings['imperial']} />
     </SafeAreaView>
   );
 }
@@ -157,6 +157,15 @@ function TimerScreen({ navigation, settings, setSettings }) {
     </SafeAreaView>
   );
 }
+function ConversionScreen({ navigation, settings, setSettings }) {
+  const newPage = 'Conversion';
+  return (
+    <SafeAreaView style={styles.screen}>
+      <NavBar style={styles.navBar} navigation={navigation} settings={settings} setSettings={setSettings} page={newPage} />
+      <TimeConversion style={styles.importedScreen} />
+    </SafeAreaView>
+  );
+}
 
 function SettingsScreen({ navigation, settings, setSettings }) {
   const newPage = 'Settings';
@@ -193,7 +202,7 @@ function LoadingScreen({ navigation, settings, setSettings }) {
       })
       .then(ret => {
         // found data go to then()
-        console.log('settings,ret: ', { ...settings, ...ret })
+        // console.log('settings,ret: ', { ...settings, ...ret })
         setSettings({ ...settings, ...ret });
         setLoaded(ret.loaded);
       })
@@ -215,13 +224,8 @@ function LoadingScreen({ navigation, settings, setSettings }) {
   }, []);
 
   useEffect(() => {
-    console.log('loaded: ' + loaded);
     if (loaded) navigation.navigate(settings['defaultPage']);
   }, [loaded]);
-
-  useEffect(() => {
-    console.log('settings: ', settings);
-  }, [settings]);
   return (
     <SafeAreaView style={styles.screen}>
     </SafeAreaView>
@@ -237,12 +241,10 @@ export default function App() {
   });
 
   useEffect(() => {
-    console.log('settings.loaded: ', settings.loaded);
+    // console.log('settings.loaded: ', settings.loaded);
     if (settings.loaded) {
-      console.log("a");
       saveNew('Settings', settings);
     }
-    loadSetSettings('Settings');
   }, [settings]);
 
   return (
@@ -271,6 +273,9 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen name="Settings">
           {props => <SettingsScreen {...props} settings={settings} setSettings={setSettings} />}
+        </Stack.Screen>
+        <Stack.Screen name="Conversion">
+          {props => <ConversionScreen {...props} settings={settings} setSettings={setSettings} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

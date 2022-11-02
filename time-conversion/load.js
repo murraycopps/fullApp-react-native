@@ -4,82 +4,76 @@ import { StyleSheet, Text, View, Button, TouchableWithoutFeedback, Keyboard, Saf
 import { useState, Component, useEffect } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import calc from './scripts.js';
+import { getOutputs } from './scripts.js';
 
-export default function Pacing({ settings }) {
-  const [isPace, setPaceOrSplit] = useState(true);
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    { label: 'Custom', value: 'custom' },
-    { label: '800', value: 800 },
-    { label: '1000', value: 1000 },
-    { label: '1500', value: 1500 },
-    { label: 'Mile', value: 1609.34 },
-    { label: '3k', value: 3000 },
-    { label: 'Two Mile', value: 3218.68 },
-    { label: '5k', value: 5000 },
-    { label: '8k', value: 8000 },
-    { label: '10k', value: 10000 },
-    { label: 'Half Marathon', value: 21097.5 },
-    { label: 'Marathon', value: 42195 },
-  ]);
-  const [minute, setMin] = useState('');
-  const [second, setSec] = useState('');
+export default function TimeConversion({ settings }) {
+  const [isTime, setIsTime] = useState(true);
   const [hour, setHour] = useState('');
-  const [isCustom, setIsCustom] = useState(true);
-  const [customDist, setCustomDist] = useState('');
-  const [index, setIndex] = useState(-1);
-  const [output, setOutput] = useState();
+  const [min, setMin] = useState('');
+  const [sec, setSec] = useState('');
+  const [dis, setDis] = useState(1);
+  const [speed, setSpeed] = useState('');
+  const [unitDis, setUnitDis] = useState('');
+  const [output, setOutput] = useState('');
+  const [labels, setLabels] = useState('');
 
-
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(1609.34);
+  const [items, setItems] = useState([
+    { label: 'mi', value: 1609.34 },
+    { label: 'km', value: 1000 },
+    { label: 'm', value: 1 },
+    { label: 'mar', value: 42195 },
+  ]);
 
   useEffect(() => {
-    setOutput(calc(index, hour, minute, second, customDist, isPace, settings));
-  }, [isPace, value, hour, minute, second, customDist, index]);
+    if(isTime) setUnitDis(value * dis);
+    else setUnitDis(value);
+  }, [value, dis]);
 
+  useEffect(() => {
+    var time = hour * 3600 + min * 60 + sec * 1;
+    setLabels(getOutputs( time , unitDis, speed, isTime)["labels"].join('\n'));
+    setOutput(getOutputs( time , unitDis, speed, isTime)["values"].join('\n'));
+  }, [isTime, hour, min, sec, unitDis, speed]);
 
+  useEffect(() => {
+    if(value == 42195) setValue(1609.34);
+    setItems(isTime ? [
+      { label: 'mi', value: 1609.34 },
+      { label: 'km', value: 1000 },
+      { label: 'm', value: 1 },
+      { label: 'mar', value: 42195 },
+    ]:[
+      { label: 'mph', value: 1609.34 },
+      { label: 'kph', value: 1000 },
+      { label: 'm/s', value: 1 },
+    ]);
+  }, [isTime]);
 
-  const toggleCustom = () => {
-    if (isCustom && value == 'custom') {
-      setIsCustom(false);
-      setValue(-1);
-    }
-    else {
-      setIsCustom(true);
-    }
-
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].value == value) {
-        setIndex(i);
-      }
-    }
-  }
   return (
     <SafeAreaView style={styles.screen}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View>
           <StatusBar style="auto" />
-          <View style={styles.buttonBox}>
-            <View style={[styles.half, value == '42195' || value == '21097.5' ? { flex: 3 } : null]}>
-              {value == '42195' || value == '21097.5' ?
-                <><TextInput
-                  style={[styles.timeInput, styles.left]}
-                  placeholder="Hour"
-                  placeholderTextColor="#878787"
-                  keyboardType="numeric"
-                  onChangeText={newText => setHour(newText)}
-                  defaultValue={hour}
-                />
-                  <Text style={styles.colon}>:</Text></>
-                : null}
+          {isTime ? <>
+            <View style={styles.buttonBox}>
               <TextInput
-                style={[styles.timeInput, value == '42195' || value == '21097.5' ? null : styles.left]}
+                style={[styles.timeInput, styles.left]}
+                placeholder="Hour"
+                placeholderTextColor="#878787"
+                keyboardType="numeric"
+                onChangeText={newText => setHour(newText)}
+                defaultValue={hour}
+              />
+              <Text style={styles.colon}>:</Text>
+              <TextInput
+                style={styles.timeInput}
                 placeholder="Min"
                 placeholderTextColor="#878787"
                 keyboardType="numeric"
                 onChangeText={newText => setMin(newText)}
-                defaultValue={minute}
+                defaultValue={min}
               />
               <Text style={styles.colon}>:</Text>
               <TextInput
@@ -88,41 +82,49 @@ export default function Pacing({ settings }) {
                 placeholderTextColor="#878787"
                 keyboardType="numeric"
                 onChangeText={newText => setSec(newText)}
-                defaultValue={second}
+                defaultValue={sec}
               />
             </View>
-            <View style={styles.gap}></View>
-            <View style={styles.half}>
-              {isCustom ? <DropDownPicker
-                placeholder='Distance'
-                style={styles.dropDown}
-                open={open}
-                value={value}
-                items={items}
-                setOpen={setOpen}
-                setValue={setValue}
-                setIndex={setIndex}
-                setItems={setItems}
-                onChangeValue={toggleCustom}
-              /> : <View style={styles.custom}>
-                <TextInput style={styles.customInput} onChangeText={newText => setCustomDist(newText)} />
-                <FontAwesome style={styles.icon} name='ban' onPress={toggleCustom} />
+            <View style={styles.buttonBox}>
+              <View style={[styles.half, { flex: 6, borderBottomRightRadius: 0, borderTopRightRadius: 0 }]}>
+                <TextInput style={styles.disInput} placeholder="Distance" placeholderTextColor="#878787" keyboardType="numeric" onChangeText={newText => setDis(newText)} defaultValue={dis} />
               </View>
-
-
-              }
-            </View>
-
-          </View>
+              <View style={[styles.half, { borderBottomLeftRadius: 0, borderTopLeftRadius: 0 }]}>
+                <DropDownPicker style={styles.dropDown}
+                  open={open}
+                  value={value}
+                  items={items}
+                  setOpen={setOpen}
+                  setValue={setValue}
+                  setItems={setItems}
+                />
+              </View>
+            </View></> :
+            <View style={styles.buttonBox}>
+              <View style={[styles.half, { flex: 6, borderBottomRightRadius: 0, borderTopRightRadius: 0 }]}>
+                <TextInput style={styles.disInput} placeholder="Speed" placeholderTextColor="#878787" keyboardType="numeric" onChangeText={newText => setSpeed(newText)} defaultValue={speed} />
+              </View>
+              <View style={[styles.half, { borderBottomLeftRadius: 0, borderTopLeftRadius: 0 }]}>
+                <DropDownPicker style={styles.dropDown}
+                  open={open}
+                  value={value}
+                  items={items}
+                  setOpen={setOpen}
+                  setValue={setValue}
+                  setItems={setItems}
+                />
+              </View>
+            </View>}
           <View style={styles.output}>
-            <Text style={styles.outputText}>{output}</Text>
+            <Text style={styles.outputText}>{labels}</Text>
+            <Text style={[styles.outputText, { textAlign: 'right' }]}>{output}</Text>
           </View>
           <View style={[styles.buttonBox, { zIndex: -5, marginBottom: windowWidth / 40 }]}>
             <TouchableOpacity
               style={styles.fullButton}
-              onPress={() => setPaceOrSplit(!isPace)}
+              onPress={() => setIsTime(!isTime)}
               underlayColor='#fff'>
-              <Text style={styles.buttonText}>Switch to {isPace ? <Text>Pace</Text> : <Text>Split</Text>}</Text>
+              <Text style={styles.buttonText}>Switch to {isTime ? <Text>Time</Text> : <Text>Speed</Text>}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -173,6 +175,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     zIndex: -1,
     borderRadius: 30,
+    flexDirection: 'row',
   },
   half: {
     // width: '49%',
@@ -218,6 +221,13 @@ const styles = StyleSheet.create({
     fontSize: normalize(20),
     textAlign: 'center',
 
+  },
+  disInput: {
+    height: '100%',
+    width: '100%',
+    color: 'black',
+    fontSize: normalize(20),
+    textAlign: 'center',
   },
   left: {
     paddingLeft: 10,
@@ -276,10 +286,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
   },
   outputText: {
-    width: '100%',
+    flex: 1,
     fontSize: normalize(25),
     marginTop: 15,
     marginLeft: 15,
+    marginRight: 15,
   },
 
 
