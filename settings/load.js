@@ -15,6 +15,7 @@ export default function Settings({ defaultValue, setDefaultValue, secondValue, s
         { label: 'Relay', value: "Relay" },
         { label: 'Timer', value: 'Timer' },
         { label: 'Conversion', value: 'Conversion' },
+        { label: 'Hill', value: 'Hill' },
     ];
 
     const [defaultOpen, setDefaultOpen] = useState(false);

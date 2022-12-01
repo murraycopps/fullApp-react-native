@@ -8,6 +8,7 @@ import Unusual from './unusual/load.js';
 import Scoring from './scoring/load.js';
 import Relay from './relay/load.js';
 import Timer from './timer/load.js';
+import Hill from './hill/load.js';
 import Settings from './settings/load.js';
 import TimeConversion from './time-conversion/load.js';
 import { NavigationContainer } from '@react-navigation/native';
@@ -29,6 +30,7 @@ function NavBar({ navigation, page, settings, setSettings }) {
     { label: 'Relay', value: "Relay" },
     { label: 'Timer', value: 'Timer' },
     { label: 'Convert', value: 'Conversion' },
+    { label: 'Hill', value: 'Hill' },
     { label: 'Settings', value: 'Settings' },
   ];
 
@@ -166,6 +168,16 @@ function ConversionScreen({ navigation, settings, setSettings }) {
     </SafeAreaView>
   );
 }
+function HillScreen({ navigation, settings, setSettings }) {
+  const newPage = 'Hill';
+  return (
+    <SafeAreaView style={styles.screen}>
+      <NavBar style={styles.navBar} navigation={navigation} settings={settings} setSettings={setSettings} page={newPage} />
+      <Hill style={styles.importedScreen} isImperial={settings.imperial} />
+    </SafeAreaView>
+  );
+}
+
 
 function SettingsScreen({ navigation, settings, setSettings }) {
   const newPage = 'Settings';
@@ -276,6 +288,9 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen name="Conversion">
           {props => <ConversionScreen {...props} settings={settings} setSettings={setSettings} />}
+        </Stack.Screen>
+        <Stack.Screen name="Hill">
+          {props => <HillScreen {...props} settings={settings} setSettings={setSettings} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
