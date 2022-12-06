@@ -44,7 +44,7 @@ export function getOutputs(time, distance, speed, isTime) {
         var kmTime = speedToTime(speed, 1000);
         var metTime = speedToTime(speed, 1);
         var mileSpeed = timeToSpeed(mileTime, 1609.34, 1609.34);
-        var kmSpeed = timeToSpeed(kmTime, 1609.34, 1000);
+        var kmSpeed = timeToSpeed(kmTime, 1000, 1000);
         var metSpeed = Math.round(timeToSpeed(mileTime, 1609.34, 1) / 360) / 10;
 
         if (distance == 1609.34) return { labels: ['Mile Time: ', 'Km Time: ', 'Meter Time: ', 'kph: ', 'm/s: '], values: [outTime(mileTime,true), outTime(kmTime,true), outTime(metTime), kmSpeed, metSpeed] };
