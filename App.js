@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component, useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import Pacing from './pacing/load.js';
+import Pacing from './pacing';
 import Vdot from './vdot/load.js';
 import Unusual from './unusual/load.js';
 import Scoring from './scoring/load.js';
@@ -18,6 +18,7 @@ import { back } from 'react-native/Libraries/Animated/Easing.js';
 import { TouchableWithoutFeedback } from 'react-native-web';
 import { loadSetSettings, saveNew } from './settings/settings.js';
 import { storage } from './settings/storage.js';
+
 
 const Stack = createNativeStackNavigator();
 function NavBar({ navigation, page, settings, setSettings }) {
@@ -106,14 +107,13 @@ function PacingScreen({ navigation, settings, setSettings }) {
   return (
     <SafeAreaView style={styles.screen}>
       <NavBar style={styles.navBar} navigation={navigation} settings={settings} setSettings={setSettings} page={newPage} />
-      <Pacing style={styles.importedScreen} settings={settings} />
+      <Pacing style={styles.importedScreen} />
     </SafeAreaView>
   );
 }
 
 function VdotScreen({ navigation, settings, setSettings }) {
   const newPage = 'Vdot';
-  // console.log('vdot screen',settings['imperial']);
   return (
     <SafeAreaView style={styles.screen}>
       <NavBar style={styles.navBar} navigation={navigation} settings={settings} setSettings={setSettings} page={newPage} />
