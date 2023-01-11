@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, TouchableOpac
 import DropDownPicker from 'react-native-dropdown-picker';
 import Pacing from './pacing';
 import Vdot from './vdot';
-import Unusual from './unusual/load.js';
+import Unusual from './unusual';
 import Scoring from './scoring/load.js';
 import Relay from './relay/load.js';
 import Timer from './timer/load.js';
@@ -261,7 +261,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={'Vdot'} screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={'Unusual'} screenOptions={{ headerShown: false }}>
         <Stack.Screen name='Loading'>
           {props => <LoadingScreen {...props} settings={settings} setSettings={setSettings} />}
         </Stack.Screen>
