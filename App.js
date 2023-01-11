@@ -3,7 +3,7 @@ import React, { Component, useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Pacing from './pacing';
-import Vdot from './vdot/load.js';
+import Vdot from './vdot';
 import Unusual from './unusual/load.js';
 import Scoring from './scoring/load.js';
 import Relay from './relay/load.js';
@@ -261,7 +261,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={'Loading'} screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={'Vdot'} screenOptions={{ headerShown: false }}>
         <Stack.Screen name='Loading'>
           {props => <LoadingScreen {...props} settings={settings} setSettings={setSettings} />}
         </Stack.Screen>
