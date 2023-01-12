@@ -5,7 +5,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import Pacing from './pacing';
 import Vdot from './vdot';
 import Unusual from './unusual';
-import Scoring from './scoring/load.js';
+import Scoring from './scoring';
 import Relay from './relay/load.js';
 import Timer from './timer/load.js';
 import Hill from './hill/load.js';
@@ -261,7 +261,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={'Unusual'} screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={'Scoring'} screenOptions={{ headerShown: false }}>
         <Stack.Screen name='Loading'>
           {props => <LoadingScreen {...props} settings={settings} setSettings={setSettings} />}
         </Stack.Screen>
