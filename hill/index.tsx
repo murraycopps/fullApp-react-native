@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TouchableWithoutFeedback, Keyboard, Button, SafeAreaView, Dimensions, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback, Keyboard, Button, SafeAreaView, Dimensions, TouchableOpacity, PixelRatio, TextInput, Platform } from 'react-native';
 import { useState, Component, useEffect } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { outTime } from '../scripts';
 
 export default function Hill({ isImperial }) {
     const [minute, setMin] = useState('');
@@ -13,19 +14,12 @@ export default function Hill({ isImperial }) {
 
     useEffect(() => {
         console.log(isImperial);
-        let time = minute * 60 + second * 1;
-        time -= 1.74 * elevation / ( isImperial ? 10 : 0.328084 );
+        let time = parseFloat(minute) * 60 + parseFloat(second);
+        time -= 1.74 * parseFloat(elevation) / ( isImperial ? 10 : 0.328084 );
         time = Math.max(time, 0);
         time = Math.round(time * 100) / 100;
         setOutput(outTime(time));
     }, [minute, second, elevation]);
-
-    function outTime(time){
-        let min = Math.floor(time / 60);
-        let sec = Math.round(time % 60 * 100) / 100;
-        if(sec < 10) sec = '0' + sec;
-        return min + ':' + sec;
-    }
 
     return (
         <SafeAreaView style={styles.screen}>

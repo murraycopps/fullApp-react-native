@@ -8,7 +8,7 @@ import Unusual from './unusual';
 import Scoring from './scoring';
 import Relay from './relay';
 import Timer from './timer';
-import Hill from './hill/load.js';
+import Hill from './hill';
 import Settings from './settings';
 import TimeConversion from './time-conversion';
 import { NavigationContainer } from '@react-navigation/native';
