@@ -7,10 +7,10 @@ import Vdot from './vdot';
 import Unusual from './unusual';
 import Scoring from './scoring';
 import Relay from './relay';
-import Timer from './timer/load.js';
+import Timer from './timer';
 import Hill from './hill/load.js';
-import Settings from './settings/load.js';
-import TimeConversion from './time-conversion/load.js';
+import Settings from './settings';
+import TimeConversion from './time-conversion';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NativeScreenNavigationContainer } from 'react-native-screens';
@@ -261,7 +261,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={'Relay'} screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={'Conversion'} screenOptions={{ headerShown: false }}>
         <Stack.Screen name='Loading'>
           {props => <LoadingScreen {...props} settings={settings} setSettings={setSettings} />}
         </Stack.Screen>

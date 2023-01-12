@@ -48,7 +48,7 @@ export default function Relay() {
           ))}
 
           <View style={styles.output}>
-            <Text style={styles.outputText}>{output}</Text>
+            <Text style={styles.outputText}>Total Time: {output}</Text>
           </View>
 
           <View

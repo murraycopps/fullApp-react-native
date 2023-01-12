@@ -1,10 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TouchableWithoutFeedback, Keyboard, Button, SafeAreaView, Dimensions, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback, Keyboard, Button, SafeAreaView, Dimensions, TouchableOpacity, PixelRatio, TextInput, Platform } from 'react-native';
 import { useState, Component, useEffect } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { loadSetSettings, setSettings, settings, saveNew } from './settings.js';
+import { loadSetSettings, saveNew } from './settings.js';
 
 export default function Settings({ defaultValue, setDefaultValue, secondValue, setSecondValue, isImperial, setIsImperial }) {
     const fullList = [
@@ -25,8 +25,8 @@ export default function Settings({ defaultValue, setDefaultValue, secondValue, s
 
 
     const setList = (value) => {
-        var newList = [];
-        for (i in fullList) {
+        const newList = [];
+        for (const i in fullList) {
             if (fullList[i].value != value) {
                 newList.push(fullList[i]);
             }
@@ -209,7 +209,6 @@ const styles = StyleSheet.create({
     },
     dropDown: {
         height: '100%',
-        borderRadius: 0,
         borderWidth: 0,
         borderColor: '#fff',
         zIndex: 1000,

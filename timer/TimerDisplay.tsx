@@ -1,9 +1,31 @@
 import { useState, Component, useEffect, useRef } from 'react';
 import React from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, Keyboard, TouchableWithoutFeedback, TouchableOpacity, PixelRatio, TextInput } from 'react-native';
-import {outTime} from './scripts.js';
+import { StyleSheet, Text, View, Button, SafeAreaView, Dimensions, Keyboard, TouchableWithoutFeedback, TouchableOpacity, PixelRatio, TextInput, Platform } from 'react-native';
 
 export default function TimerDisplay(props) {
+
+    const outTime = (time: number) => {
+        let min = Math.round(time / 60 - 0.5) as number | string
+        let sec = Math.round(100 * (time - 60 * parseFloat(min.toString()))) / 100 as number | string
+    
+        if (sec < 10) {
+            sec = "0" + sec;
+        }
+        let secS = sec.toString();
+    
+        if (secS.length == 2) {
+            sec = sec + ".00"
+        }
+        else if (secS.length == 4) {
+            sec = sec + "0";
+        }
+    
+        if (min < 10) {
+            min = "0" + min;
+        }
+        return min + ":" + sec;
+    }
+
     return (
             <View style={styles.timerBox} >
                 <Text style={styles.timerText}>{outTime(props.time)}</Text>
@@ -45,6 +67,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center',
         textAlign: 'justify',
-        fontStyle: '',
     }
 });
