@@ -261,7 +261,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={'Conversion'} screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={'Loading'} screenOptions={{ headerShown: false }}>
         <Stack.Screen name='Loading'>
           {props => <LoadingScreen {...props} settings={settings} setSettings={setSettings} />}
         </Stack.Screen>
