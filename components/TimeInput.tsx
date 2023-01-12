@@ -13,17 +13,18 @@ type TimeInputProps = {
   time: number;
   setTime: (time: number) => void;
   showHour?: boolean;
+  style?: any;
 };
 
 export default function TimeInput({
   time,
   setTime,
   showHour = true,
+  style = {},
 }: TimeInputProps) {
   const [hour, setHour] = useState(Math.floor(time / 3600));
   const [min, setMin] = useState(Math.floor((time / 60) % 60));
   const [sec, setSec] = useState(time % 60);
-
   useEffect(() => {
     if (hour < 0) setHour(0);
     if (min < 0) setMin(0);
@@ -38,7 +39,7 @@ export default function TimeInput({
   }, [time]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       {showHour && (
         <>
           <TextInput
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     overflow: "hidden",
     backgroundColor: "white",
-    borderRadius: 50,
+    borderRadius: 1000,
   },
   input: {
     flex: 1,
@@ -116,7 +117,6 @@ const styles = StyleSheet.create({
     color: "inherit",
   },
   text: {
-    height: "100%",
     display: "flex",
     alignItems: "center",
     fontSize: normalize(35),

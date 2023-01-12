@@ -236,49 +236,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 50,
   },
-  halfButton: {
-    width: "49%",
-    justifyContent: "center",
-    alignContent: "center",
-    backgroundColor: "#fff",
-  },
-  fullButton: {
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignContent: "center",
-    backgroundColor: "#fff",
-    zIndex: -5,
-    borderRadius: 50,
-  },
-  buttonText: {
-    color: "black",
-    textAlign: "center",
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  timeInput: {
-    flex: 48,
-    height: "100%",
-    backgroundColor: "#fff",
-    color: "black",
-    fontSize: normalize(20),
-    textAlign: "center",
-  },
-  colon: {
-    flex: 8,
-    height: "100%",
-    textAlign: "center",
-    justifyContent: "center",
-    fontSize: normalize(35),
-    backgroundColor: "#fff",
-  },
-  dropDown: {
-    height: "100%",
-    borderWidth: 0,
-    zIndex: 1000,
-    borderRadius: 50,
-  },
+  
+  
   custom: {
     flex: 1,
     flexDirection: "row",

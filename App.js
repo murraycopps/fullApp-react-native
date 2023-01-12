@@ -6,7 +6,7 @@ import Pacing from './pacing';
 import Vdot from './vdot';
 import Unusual from './unusual';
 import Scoring from './scoring';
-import Relay from './relay/load.js';
+import Relay from './relay';
 import Timer from './timer/load.js';
 import Hill from './hill/load.js';
 import Settings from './settings/load.js';
@@ -261,7 +261,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={'Scoring'} screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={'Relay'} screenOptions={{ headerShown: false }}>
         <Stack.Screen name='Loading'>
           {props => <LoadingScreen {...props} settings={settings} setSettings={setSettings} />}
         </Stack.Screen>
