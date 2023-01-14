@@ -222,7 +222,7 @@ export default function TimeConversion({ settings }) {
               </View>
             </View>
           )}
-          <View style={styles.output}>
+          <View style={[styles.output, { flex: isTime ? 8 : 9}]}>
             <Text style={styles.outputText}>{output.join("\n")}</Text>
           </View>
           <TouchableOpacity
