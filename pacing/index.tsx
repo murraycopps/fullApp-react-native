@@ -288,8 +288,8 @@ const styles = StyleSheet.create({
     userSelect: "none",
     boxSize: "border-box",
     zIndex: -5,
-    marginBottom: windowWidth / 80,
     flex: 1.25,
+    margin: windowWidth / 80,
     paddingHorizontal: 20,
   },
   left: {

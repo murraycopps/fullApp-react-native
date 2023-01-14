@@ -232,16 +232,32 @@ export default function TimeConversion({ settings }) {
             ]}
           >
             <TouchableOpacity
-              style={styles.fullButton}
-              onPress={() => {
-                setIsTime(!isTime)
-                setOutput([])
-              }}
+            onPress={() => {
+              setIsTime(!isTime)
+              setOutput([])
+            }}
+            style={[styles.switch, isTime ? styles.left : null]}
+            activeOpacity={1}
+          >
+            <Text
+              style={[
+                {
+                  position: "absolute",
+                  width: "100%",
+                },
+                isTime
+                  ? {
+                      textAlign: "left",
+                    }
+                  : {
+                      textAlign: "right",
+                    },
+              ]}
             >
-              <Text style={styles.buttonText}>
-                Switch to {!isTime ? 'Time' : 'Speed'}
-              </Text>
-            </TouchableOpacity>
+              Switch to {isTime ? "Speed" : "Time"}
+            </Text>
+            <View style={styles.switchItem} />
+          </TouchableOpacity>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -337,16 +353,6 @@ const styles = StyleSheet.create({
     fontSize: normalize(20),
     textAlign: "center",
   },
-  left: {
-    paddingLeft: 10,
-    borderTopLeftRadius: 50,
-    borderBottomLeftRadius: 50,
-  },
-  right: {
-    paddingRight: 10,
-    borderBottomRightRadius: 50,
-    borderTopRightRadius: 50,
-  },
   colon: {
     // width: '4%',
     flex: 8,
@@ -398,5 +404,31 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginLeft: 15,
     marginRight: 15,
+  },
+  
+  switch: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "white",
+    color: "black",
+    borderRadius: 50,
+    position: "relative",
+    userSelect: "none",
+    boxSize: "border-box",
+    zIndex: -5,
+    flex: 1.25,
+    margin: windowWidth / 80,
+    paddingHorizontal: 20,
+  },
+  left: {
+    flexDirection: "row-reverse",
+  },
+  switchItem: {
+    height: "90%",
+    aspectRatio: 1,
+    backgroundColor: "#F65900",
+    borderRadius: 1000,
   },
 });

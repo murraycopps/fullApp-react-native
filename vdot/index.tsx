@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
     userSelect: "none",
     boxSize: "border-box",
     zIndex: -5,
-    marginBottom: windowWidth / 80,
+    margin: windowWidth / 80,
     flex: 1.25,
     paddingHorizontal: 10,
   },
