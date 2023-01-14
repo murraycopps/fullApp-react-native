@@ -223,18 +223,12 @@ export default function TimeConversion({ settings }) {
             </View>
           )}
           <View style={styles.output}>
-            <Text style={styles.outputText}>{output.join('\n')}</Text>
+            <Text style={styles.outputText}>{output.join("\n")}</Text>
           </View>
-          <View
-            style={[
-              styles.buttonBox,
-              { zIndex: -5, marginBottom: windowWidth / 40 },
-            ]}
-          >
-            <TouchableOpacity
+          <TouchableOpacity
             onPress={() => {
-              setIsTime(!isTime)
-              setOutput([])
+              setIsTime(!isTime);
+              setOutput([]);
             }}
             style={[styles.switch, isTime ? styles.left : null]}
             activeOpacity={1}
@@ -258,7 +252,6 @@ export default function TimeConversion({ settings }) {
             </Text>
             <View style={styles.switchItem} />
           </TouchableOpacity>
-          </View>
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
@@ -405,7 +398,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
   },
-  
+
   switch: {
     display: "flex",
     flexDirection: "row",
